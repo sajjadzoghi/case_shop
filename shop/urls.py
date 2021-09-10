@@ -23,7 +23,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('product/', include('product.urls')),
     path('order/', include('order.urls')),
-    path('coupan/', include('coupan.urls')),
+    path('coupon/', include('coupon.urls')),
     path('api/v1/', include('core.api.urls')),
 ]
 
