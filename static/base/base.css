@@ -148,11 +148,14 @@ i:hover {
 }
 
 .ord-card {
-    width: 65rem;
-    height: 3rem;
     border-radius: 0;
+    height: 4rem;
+}
+
+.ord-row {
+    margin-left: 0.5rem;
+    width: 66rem;
     text-align: right;
-    padding-bottom: 4rem;
 }
 
 .ord-links {
@@ -174,19 +177,18 @@ i:hover {
 }
 
 
-.card-group {
-    width: 65rem;
-    border: none;
+.content-row {
+    width: 64rem;
+    margin-left: 1.5rem;
 }
 
-
-.card-group .card {
+.content-row .card {
     border-radius: 0;
     height: 28rem;
 }
 
 
-.card-group .card:hover {
+.content-row .card:hover {
     box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.2);
 }
 
@@ -201,7 +203,7 @@ i:hover {
 .side {
     width: 15rem;
     margin-left: auto;
-    margin-right: 15px;
+    margin-right: 1rem;
 }
 
 

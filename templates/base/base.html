@@ -12,6 +12,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="{% static 'base/base.css' %}">
+    {% block style %}{% endblock %}
+    {% block script %}{% endblock %}
 </head>
 <body>
 <nav class="navbar navbar-expand fixed-top">
@@ -37,15 +39,18 @@
                                     <h6>{{ user.first_name }} {{ user.last_name }}</h6>
                                 </div>
                                 <div class="card-body" style="text-align: right">
-                                    <a href="#" style="font-size: 14px">مشاهده حساب کاربری<i class="fa fa-fw fa-user-circle-o"></i></a><br>
-                                    <a href="#" style="font-size: 14px">سفارش‌های من<i class="fa fa-fw fa-shopping-bag"></i></a><br>
-                                    <a href="#" style="font-size: 14px">خروج از حساب کاربری<i class="fa fa-fw fa-sign-out"></i></a>
+                                    <a href="#" style="font-size: 14px">مشاهده حساب کاربری<i
+                                            class="fa fa-fw fa-user-circle-o"></i></a><br>
+                                    <a href="#" style="font-size: 14px">سفارش‌های من<i
+                                            class="fa fa-fw fa-shopping-bag"></i></a><br>
+                                    <a href="#" style="font-size: 14px">خروج از حساب کاربری<i
+                                            class="fa fa-fw fa-sign-out"></i></a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 {% else %}
-                    <div style="width: 10rem;margin-right: 13rem">
+                    <div style="width: 2rem;margin-right: 19rem">
                         <a href="#">ورود/ ثبت‌نام<i class="fa fa-fw fa-user"
                                                     style="font-size:24px"></i></a>
                     </div>
@@ -61,7 +66,12 @@
                     <i class="fa fa-fw fa-map-marker" style="font-size:20px;margin-top: 1rem"></i>
                 </li>
                 <li>
-                    <a class="nav-link location" href="#" style="margin-right: 10rem;">ارسال به خراسان رضوی، مشهد</a>
+                    {% if user.is_authenticated %}
+                        <a class="nav-link location" href="#" style="margin-right: 10rem;">ارسال
+                            به {{ user.address.city }}، {{ user.address.province }}</a>
+                    {% else %}
+                        <a class="nav-link location" href="#" style="margin-right: 10rem;">شهر خود را انتخاب نمایید</a>
+                    {% endif %}
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">تماس با کالاشاپ<i class="fa fa-fw fa-phone"></i></a>
@@ -80,9 +90,9 @@
                         <a class="dropbtn nav-link" href="#">دسته‌بندی کالاها<i class="fa fa-fw fa-bars"></i></a>
                         <div class="dropdown-content dropdown-cat">
                             <a href="#">کالای دیجیتال<i class="fa fa-fw fa-laptop"></i></a>
+                            <a href="#">کالاهای سوپرمارکتی<i class="fa fa-fw fa-shopping-basket"></i></a>
                             <a href="#">لوازم جانبی<i class="fa fa-fw fa-headphones"></i></a>
                             <a href="#">اسباب‌‌ بازی، کودک و نوزاد<i class="fa fa-fw fa-child"></i></a>
-                            <a href="#">کالاهای سوپرمارکتی<i class="fa fa-fw fa-shopping-basket"></i></a>
                             <a href="#">زیبایی و سلامت<i class="fa fa-fw fa-heart"></i></a>
                             <a href="#">خانه و آشپزخانه<i class="fa fa-fw fa-table"></i></a>
                             <a href="#">کتاب، لوازم‌التحریر و هنر<i class="fa fa-fw fa-pencil"></i></a>
@@ -98,221 +108,29 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-md-9">
-            <p style="width: 65rem;padding-right: 2px">فروشگاه اینترنتی کالاشاپ / کالای دیجیتال / موبایل / گوشی</p>
-            <div class="card ord-card">
-                <div class="card-body row flex-row-reverse">
-                    <p class="card-text">:مرتب سازی براساس&nbsp<i class="fa fa-fw fa-list-ol"></i></p>
-                    <div class="ord-links">
-                        <button href="#">ارزان‌ترین</button>
-                        <button href="#">گران‌ترین</button>
-                        <button href="#">پربازدید‌ترین</button>
-                        <button href="#" class="bg-primary text-light">پرفروش‌ترین</button>
-                        <button href="#">جدید‌ترین</button>
+            <div class="row ord-row">
+                <div class="col-12">
+                    <p style="padding-right: 2px">فروشگاه اینترنتی کالاشاپ / کالای دیجیتال / موبایل /
+                        گوشی</p>
+                    <div class="card ord-card">
+                        <div class="card-body row flex-row-reverse">
+                            <p class="card-text">:مرتب سازی براساس&nbsp<i class="fa fa-fw fa-list-ol"></i></p>
+                            <div class="ord-links">
+                                <button href="#">ارزان‌ترین</button>
+                                <button href="#">گران‌ترین</button>
+                                <button href="#">پرفروش‌ترین</button>
+                                <button href="#" class="bg-primary text-light">جدید‌ترین</button>
+                                <button href="#">پربازدید‌ترین</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="card-group">
-                <div class="card">
-                    <img class="card-img-top" src="images/1.jpg" alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text">گوشی موبایل شیائومی مدل CSS5748 ظرفیت 128 گیگابایت و رم 6 گیگابایت</p>
-                        <div class="row" style="margin-left: 3px">
-                            <i class="fa fa-fw fa-star" style="color: yellow; margin-top: 7px"></i>
-                            <h4>۴.۴</h4>
-                            <p style="margin-top: 4px">(۵۸)</p>
-                        </div>
-                        <div class="row" style="margin-left: 3px">
-                            <p style="margin-top: 3px">تومان</p>
-                            <h3>&nbsp26٫500٫000</h3>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top" src="images/2.jpg" alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text">گوشی موبایل شیائومی مدل CSS5748 ظرفیت 128 گیگابایت و رم 6 گیگابایت</p>
-                        <div class="row" style="margin-left: 3px">
-                            <i class="fa fa-fw fa-star" style="color: yellow; margin-top: 7px"></i>
-                            <h4>۴.۳</h4>
-                            <p style="margin-top: 4px">(۶۸)</p>
-                        </div>
-                        <div class="row" style="margin-left: 3px">
-                            <p style="margin-top: 3px">تومان</p>
-                            <h3>&nbsp22٫700٫000</h3>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top" src="images/1.jpg" alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text">گوشی موبایل شیائومی مدل CSS5748 ظرفیت 128 گیگابایت و رم 6 گیگابایت</p>
-                        <div class="row" style="margin-left: 3px">
-                            <i class="fa fa-fw fa-star" style="color: yellow; margin-top: 7px"></i>
-                            <h4>۴.۶</h4>
-                            <p style="margin-top: 4px">(۲۹)</p>
-                        </div>
-                        <div class="row" style="margin-left: 3px">
-                            <p style="margin-top: 3px">تومان</p>
-                            <h3>&nbsp21٫000٫000</h3>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top" src="images/3.jpg" alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text">گوشی موبایل شیائومی مدل CSS5748 ظرفیت 128 گیگابایت و رم 6 گیگابایت</p>
-                        <div class="row" style="margin-left: 3px">
-                            <i class="fa fa-fw fa-star" style="color: yellow; margin-top: 7px"></i>
-                            <h4>۴.۱</h4>
-                            <p style="margin-top: 4px">(۵۲)</p>
-                        </div>
-                        <div class="row" style="margin-left: 3px">
-                            <p style="margin-top: 3px">تومان</p>
-                            <h3>&nbsp28٫750٫000</h3>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-            </div>
-            <div class="card-group">
-                <div class="card">
-                    <img class="card-img-top" src="images/6.jpg" alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text">گوشی موبایل شیائومی مدل CSS5748 ظرفیت 128 گیگابایت و رم 6 گیگابایت</p>
-                        <div class="row" style="margin-left: 3px">
-                            <i class="fa fa-fw fa-star" style="color: yellow; margin-top: 7px"></i>
-                            <h4>۴.۳</h4>
-                            <p style="margin-top: 4px">(۱۸)</p>
-                        </div>
-                        <div class="row" style="margin-left: 3px">
-                            <p style="margin-top: 3px">تومان</p>
-                            <h3>&nbsp19٫500٫000</h3>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top" src="images/7.jpg" alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text">گوشی موبایل شیائومی مدل CSS5748 ظرفیت 128 گیگابایت و رم 6 گیگابایت</p>
-                        <div class="row" style="margin-left: 3px">
-                            <i class="fa fa-fw fa-star" style="color: yellow; margin-top: 7px"></i>
-                            <h4>۴.۴</h4>
-                            <p style="margin-top: 4px">(۲۴)</p>
-                        </div>
-                        <div class="row" style="margin-left: 3px">
-                            <p style="margin-top: 3px">تومان</p>
-                            <h3>&nbsp26٫000٫000</h3>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top" src="images/10.jpg" alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text">گوشی موبایل شیائومی مدل CSS5748 ظرفیت 128 گیگابایت و رم 6 گیگابایت</p>
-                        <div class="row" style="margin-left: 3px">
-                            <i class="fa fa-fw fa-star" style="color: yellow; margin-top: 7px"></i>
-                            <h4>۴.۲</h4>
-                            <p style="margin-top: 4px">(۲۱)</p>
-                        </div>
-                        <div class="row" style="margin-left: 3px">
-                            <p style="margin-top: 3px">تومان</p>
-                            <h3>&nbsp25٫500٫000</h3>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top" src="images/8.jpg" alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text">گوشی موبایل شیائومی مدل CSS5748 ظرفیت 128 گیگابایت و رم 6 گیگابایت</p>
-                        <div class="row" style="margin-left: 3px">
-                            <i class="fa fa-fw fa-star" style="color: yellow; margin-top: 7px"></i>
-                            <h4>۴.۵</h4>
-                            <p style="margin-top: 4px">(۱۸)</p>
-                        </div>
-                        <div class="row" style="margin-left: 3px">
-                            <p style="margin-top: 3px">تومان</p>
-                            <h3>&nbsp20٫500٫000</h3>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-            </div>
-            <div class="card-group">
-                <div class="card">
-                    <img class="card-img-top" src="images/9.jpg" alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text">گوشی موبایل شیائومی مدل CSS5748 ظرفیت 128 گیگابایت و رم 6 گیگابایت</p>
-                        <div class="row" style="margin-left: 3px">
-                            <i class="fa fa-fw fa-star" style="color: yellow; margin-top: 7px"></i>
-                            <h4>۴.۰</h4>
-                            <p style="margin-top: 4px">(۳۱)</p>
-                        </div>
-                        <div class="row" style="margin-left: 3px">
-                            <p style="margin-top: 3px">تومان</p>
-                            <h3>&nbsp26٫500٫000</h3>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top" src="images/12.jpg" alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text">گوشی موبایل شیائومی مدل CSS5748 ظرفیت 128 گیگابایت و رم 6 گیگابایت</p>
-                        <div class="row" style="margin-left: 3px">
-                            <i class="fa fa-fw fa-star" style="color: yellow; margin-top: 7px"></i>
-                            <h4>۴.۲</h4>
-                            <p style="margin-top: 4px">(۱۰)</p>
-                        </div>
-                        <div class="row" style="margin-left: 3px">
-                            <p style="margin-top: 3px">تومان</p>
-                            <h3>&nbsp26٫500٫000</h3>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top" src="images/13.jpg" alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text">گوشی موبایل شیائومی مدل CSS5748 ظرفیت 128 گیگابایت و رم 6 گیگابایت</p>
-                        <div class="row" style="margin-left: 3px">
-                            <i class="fa fa-fw fa-star" style="color: yellow; margin-top: 7px"></i>
-                            <h4>۴.۰</h4>
-                            <p style="margin-top: 4px">(۸)</p>
-                        </div>
-                        <div class="row" style="margin-left: 3px">
-                            <p style="margin-top: 3px">تومان</p>
-                            <h3>&nbsp26٫500٫000</h3>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top" src="images/15.jpg" alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text">گوشی موبایل شیائومی مدل CSS5748 ظرفیت 128 گیگابایت و رم 6 گیگابایت</p>
-                        <div class="row" style="margin-left: 3px">
-                            <i class="fa fa-fw fa-star" style="color: yellow; margin-top: 7px"></i>
-                            <h4>۳.۹</h4>
-                            <p style="margin-top: 4px">(۵)</p>
-                        </div>
-                        <div class="row" style="margin-left: 3px">
-                            <p style="margin-top: 3px">تومان</p>
-                            <h3>&nbsp26٫500٫000</h3>
-                        </div>
-                        <a href="#" class="stretched-link"></a>
-                    </div>
-                </div>
-            </div>
+            {% block content %}{% endblock %}
         </div>
         <div class="d-none d-md-block col-md-3">
             <div class="card side p-2 mt-3"
-                 style="background-image: url('static/base/img/free-ship.png');background-repeat: no-repeat">
+                 style="background-image: url({% static 'base/img/free-ship.png' %});background-repeat: no-repeat">
                 <h6>ارسال رایگان سفارش</h6>
                 <p style="font-size: 15px;color:darkgrey">سفارش های بالای ۳۰۰هزار تومان</p>
             </div>

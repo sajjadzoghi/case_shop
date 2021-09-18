@@ -7,7 +7,7 @@ from product.models import Product
 
 
 class AllProductView(generic.ListView):
-    template_name = 'product/all-product.html'
+    template_name = 'product/all-products.html'
     context_object_name = 'all_products'
 
     def get_queryset(self):
