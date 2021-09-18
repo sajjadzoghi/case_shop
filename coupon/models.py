@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.validators import MaxValueValidator
 from django.db import models
 
 
@@ -6,7 +7,7 @@ from django.db import models
 class Coupon(models.Model):
     customers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='coupons')
     code = models.CharField(max_length=15)
-    amount = models.IntegerField()
+    amount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(100)])
 
     class Meta:
         verbose_name_plural = 'کدهای تخفیف'

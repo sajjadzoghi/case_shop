@@ -1,0 +1,229 @@
+@font-face {
+    font-family: 'Weblogma_Yekan';
+    src: url('fonts/Weblogma_Yekan.eot');
+    src: url('fonts/Weblogma_Yekan.woff') format('woff');
+url('../fonts/Weblogma_Yekan.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+body {
+    font-family: "Weblogma_Yekan";
+}
+
+p, a, h5, h4, h6 {
+    color: #7b7a7a;
+    text-align: right;
+}
+
+
+.nav-link {
+    border-radius: 5%;
+    margin-top: 5px;
+    margin-bottom: 0;
+    border: none;
+}
+
+.nav-link:hover {
+    color: unset;
+    background-color: rgba(0, 0, 0, 0.26);
+}
+
+.dropdown-cat {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 40vh;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-cat a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: right;
+    border: 0.1mm solid #e3e3e3;
+}
+
+.dropdown-cat a:hover, .dropdown-cat i:hover {
+    background-color: #eaeaea;
+    color: #d9361b;
+}
+
+
+.dropdown:hover .dropdown-cat {
+    display: block;
+}
+
+.dropdown-user {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 25vh;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-user .card-body {
+    padding: 5px 5px 5px 0px
+}
+
+.dropdown:hover .dropdown-user {
+    display: block;
+}
+
+img {
+    height: 14vh;
+    width: 11rem;
+    background-color: white;
+    border: none;
+    object-fit: contain;
+}
+
+.button-logo {
+    background-color: white;
+    height: 0;
+    width: 0;
+    border: none;
+    margin-right: 5rem;
+    margin-left: 0.5rem;
+    margin-bottom: 6.5rem;
+}
+
+.navbar {
+    height: 16%;
+    padding-top: 1.5rem;
+    padding-bottom: 0.9rem;
+    background-color: white;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.input-search {
+    color: #7b7a7a;
+    width: 30rem;
+    background-color: whitesmoke;
+    border: none;
+    text-align: right;
+    outline: none;
+}
+
+.search-btn {
+    margin-right: 5px;
+    padding-right: 5px;
+    padding-top: 8px;
+    height: 2.5rem;
+    background-color: whitesmoke;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.cancel-btn {
+    padding-left: 5px;
+    padding-top: 8px;
+    background-color: whitesmoke;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+i {
+    color: #929292;
+}
+
+i:hover {
+    outline: none;
+}
+
+.location:hover {
+    background-color: unset;
+}
+
+.container-fluid {
+    padding-top: 9%;
+    background-color: whitesmoke;
+    text-align: right;
+
+}
+
+.ord-card {
+    width: 65rem;
+    height: 3rem;
+    border-radius: 0;
+    text-align: right;
+    padding-bottom: 4rem;
+}
+
+.ord-links {
+    padding-right: 1rem;
+}
+
+.ord-links button {
+    background-color: white;
+    color: #7b7a7a;
+    border: white;
+    border-radius: 10%;
+}
+
+
+.ord-links button:hover {
+    background-color: rgba(0, 0, 0, 0.26);
+    color: unset;
+    text-decoration: none;
+}
+
+
+.card-group {
+    width: 65rem;
+    border: none;
+}
+
+
+.card-group .card {
+    border-radius: 0;
+    height: 28rem;
+}
+
+
+.card-group .card:hover {
+    box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.2);
+}
+
+
+.card-img-top {
+    width: 100%;
+    height: 40%;
+    margin-top: 2rem;
+}
+
+
+.side {
+    width: 15rem;
+    margin-left: auto;
+    margin-right: 15px;
+}
+
+
+.card-header {
+    background-color: white;
+    height: 3rem;
+}
+
+
+.card-body a:hover {
+    color: unset;
+    text-decoration: none;
+}
+
+
+.search-res {
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+    color: #7b7a7a;
+    width: 10.5rem;
+    background-color: whitesmoke;
+    border: none;
+    text-align: right;
+    outline: none;
+}

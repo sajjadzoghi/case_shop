@@ -1,5 +1,6 @@
+from django.core.validators import MaxValueValidator
 from django.db import models
-from shop.utils import product_image_path1, product_image_path2
+from shop.utils import product_image_path, product_media_path
 
 
 # Create your models here.
@@ -28,14 +29,14 @@ class Color(models.Model):
 
 
 class Product(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     name = models.CharField(max_length=200, unique=True)
     # main image
-    image = models.ImageField(upload_to=product_image_path1)
+    image = models.ImageField(upload_to=product_image_path)
     description = models.TextField()
-    color = models.ForeignKey(Color, on_delete=models.CASCADE)
+    color = models.ForeignKey(Color, on_delete=models.CASCADE, null=True)
     inventory = models.IntegerField(default=0)
     price = models.IntegerField()
-    discount = models.IntegerField(default=0)
 
     class Meta:
         verbose_name_plural = 'محصولات'
@@ -52,14 +53,21 @@ class Product(models.Model):
                 return int(self.price - (self.price * discount.amount / 100))
         return self.price
 
-class ProductImage(models.Model):
-    # additional image/images
+
+class ProductMedia(models.Model):
+    # product additional media like: additional images, videos,...
+    image = 'image'
+    video = 'video'
+    media_types = (
+        (image, 'image'),
+        (video, 'video')
+    )
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to=product_image_path2)
+    media = models.FileField(choices=media_types, upload_to=product_media_path)
 
     class Meta:
-        verbose_name_plural = 'عکس‌های محصولات'
-        verbose_name = 'عکس'
+        verbose_name_plural = 'مدیاهای محصولات'
+        verbose_name = 'مدیا'
 
     def __str__(self):
         return self.product.name
@@ -67,7 +75,7 @@ class ProductImage(models.Model):
 
 class ProductDiscount(models.Model):
     products = models.ManyToManyField(Product, related_name='discounts')
-    amount = models.IntegerField
+    amount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(100)])
 
     class Meta:
         verbose_name_plural = 'تخفیفات کلی محصولات'

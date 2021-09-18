@@ -15,7 +15,7 @@ class Order(models.Model):
     # order status
     cancel = 'انصراف'
     active = 'فعال'
-    bargiri = 'انبار'
+    bargiri = 'بارگیری'
     delivery = 'پیک'
     sent = 'تحویل'
     order_status = (
