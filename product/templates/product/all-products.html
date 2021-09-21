@@ -1,14 +1,22 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-
 {% block title %}همه محصولات{% endblock %}
 
-{% block script %}
-    <script src="{% static 'product/all-products.js' %}"></script>
+{% block style %}
+    <style href="{% static 'product/css/all-products.css' %}"></style>
 {% endblock %}
 
 {% block content %}
     <div class="row content-row">
     </div>
+{% endblock %}
+
+{% block pagination %}
+    <div class="pagination">
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'product/js/all-products.js' %}"></script>
 {% endblock %}

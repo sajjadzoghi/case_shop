@@ -1,6 +1,7 @@
 from django.urls import path, include
 
-app_name = 'accounts'
-urlpatterns = [
+from accounts.api.views import GetMobileNumberRegistered
 
+urlpatterns = [
+    path('register/', GetMobileNumberRegistered.as_view(), name='register')
 ]

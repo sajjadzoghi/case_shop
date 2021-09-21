@@ -41,10 +41,9 @@ class CustomUserManager(BaseUserManager):
 class Customer(AbstractUser):
     username = None
     mobile = models.CharField(_('mobile'), unique=True, max_length=11)
-    is_customer = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'mobile'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     objects = CustomUserManager()
 
