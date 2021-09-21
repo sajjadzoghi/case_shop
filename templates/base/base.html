@@ -13,7 +13,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="{% static 'base/base.css' %}">
     {% block style %}{% endblock %}
-    {% block script %}{% endblock %}
+
 </head>
 <body>
 <nav class="navbar navbar-expand fixed-top">
@@ -31,12 +31,12 @@
                     </div>
                 </div>
                 {% if user.is_authenticated %}
-                    <div style="width: 2rem;margin-right: 19rem">
+                    <div style="width: 2rem;margin-right: 19rem;">
                         <div class="dropdown">
-                            <a href="#"><i class="fa fa-fw fa-user" style="font-size:24px"></i></a>
+                            <a href="#"><i class="fa fa-fw fa-user" style="font-size:35px"></i></a>
                             <div class="dropdown-content card dropdown-user">
                                 <div class="card-header">
-                                    <h6>{{ user.first_name }} {{ user.last_name }}</h6>
+                                    <h4>{{ user.first_name }} {{ user.last_name }}</h4>
                                 </div>
                                 <div class="card-body" style="text-align: right">
                                     <a href="#" style="font-size: 14px">مشاهده حساب کاربری<i
@@ -50,29 +50,27 @@
                         </div>
                     </div>
                 {% else %}
-                    <div style="width: 2rem;margin-right: 19rem">
-                        <a href="#">ورود/ ثبت‌نام<i class="fa fa-fw fa-user"
-                                                    style="font-size:24px"></i></a>
+                    <div style="width: 10rem;margin-right: 15rem">
+                        <button class="auth-btn" data-toggle="modal"
+                                data-target="#register-modal">ثبت‌نام
+                        </button>
+                        <button class="auth-btn" data-toggle="modal"
+                                data-target="#login-modal">ورود<i class="fa fa-fw fa-user"
+                                                                  style="font-size:18px"></i></button>
                     </div>
                 {% endif %}
-                <div style="height: 1.5rem;border: 0.001mm ridge silver;margin-right: 10px;margin-top: 2px"></div>
+                <div style="height: 1.5rem;border: 0.001mm ridge silver;margin-right: 10px;margin-top: 5px"></div>
                 <div>
                     <a style="margin-right: 1rem" href="#"><i class="fa fa-fw fa-shopping-cart"
-                                                              style="font-size:24px"></i></a>
+                                                              style="font-size:35px"></i></a>
                 </div>
             </div>
             <ul class="navbar-nav ml-auto">
                 <li>
                     <i class="fa fa-fw fa-map-marker" style="font-size:20px;margin-top: 1rem"></i>
                 </li>
-                <li>
-                    {% if user.is_authenticated %}
-                        <a class="nav-link location" href="#" style="margin-right: 10rem;">ارسال
-                            به {{ user.address.city }}، {{ user.address.province }}</a>
-                    {% else %}
-                        <a class="nav-link location" href="#" style="margin-right: 10rem;">شهر خود را انتخاب نمایید</a>
-                    {% endif %}
-                </li>
+
+
                 <li class="nav-item">
                     <a class="nav-link" href="#">تماس با کالاشاپ<i class="fa fa-fw fa-phone"></i></a>
                 </li>
@@ -106,6 +104,85 @@
 </nav>
 
 <div class="container-fluid">
+    <div class="modal fade" id="register-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form method="POST" action="" id="register-form">
+                        <div class="form-group">
+                            <label for="mobile">:شماره موبایل</label>
+                            <input type="text" class="form-control" name="mobile" id="mobile" maxlength="11" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile">:نام</label>
+                            <input type="text" class="form-control" name="mobile" id="mobile" maxlength="11" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile">:نام‌خانوادگی</label>
+                            <input type="text" class="form-control" name="mobile" id="mobile" maxlength="11" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile">:ایمیل</label>
+                            <input type="text" class="form-control" name="mobile" id="mobile" maxlength="11" required>
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary mr-3" data-dismiss="modal" id="check-otp-btn">
+                                تکمیل ثبت نام
+                            </button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#    <div class="modal fade" id="register-modal">#}
+    {#        <div class="modal-dialog modal-lg">#}
+    {#            <div class="modal-content">#}
+    {#                <div class="modal-body">#}
+    {#                    <form method="POST" action="" id="tour-form">#}
+    {#                        <div class="form-group">#}
+    {#                            <label for="mobile">:شماره موبایل</label>#}
+    {#                            <input type="text" class="form-control" name="mobile" id="mobile" maxlength="11">#}
+    {#                        </div>#}
+    {#                        <div class="form-group">#}
+    {#                            <label for="password">:رمز عبور</label>#}
+    {#                            <input type="text" class="form-control" name="password" id="password">#}
+    {#                        </div>#}
+    {#                        <div class="btn-group">#}
+    {#                            <button type="button" class="btn btn-primary mr-3" data-dismiss="modal" id="add-user-btn"> ثبت نام#}
+    {#                            </button>#}
+    {#                            <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>#}
+    {#                        </div>#}
+    {#                    </form>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
+    <div class="modal fade" id="login-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form method="POST" action="" id="login-form">
+                        <div class="form-group">
+                            <label for="mobile">:شماره موبایل</label>
+                            <input type="text" class="form-control" name="mobile" id="mobile" maxlength="11">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">:رمز عبور</label>
+                            <input type="text" class="form-control" name="password" id="password">
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary mr-3" data-dismiss="modal" id="add-btn">ورود به
+                                کالاشاپ
+                            </button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12 col-md-9">
             <div class="row ord-row">
@@ -127,6 +204,7 @@
                 </div>
             </div>
             {% block content %}{% endblock %}
+            {% block pagination %}{% endblock %}
         </div>
         <div class="d-none d-md-block col-md-3">
             <div class="card side p-2 mt-3"
@@ -151,6 +229,8 @@
         </div>
     </div>
 </div>
+<script src="{% static 'accounts/js/register.js' %}"></script>
+{% block script %}{% endblock %}
 </body>
 </html>
 

@@ -68,7 +68,12 @@ p, a, h5, h4, h6 {
 }
 
 .dropdown-user .card-body {
-    padding: 5px 5px 5px 0px
+    padding: 5px 7px 5px 0px
+}
+
+.dropdown-user .card-header {
+    height: 2.5rem;
+    padding: 5px 7px 5px 0px
 }
 
 .dropdown:hover .dropdown-user {
@@ -229,3 +234,57 @@ i:hover {
     text-align: right;
     outline: none;
 }
+
+.form-control:focus {
+    background-color: rgba(255, 255, 255, 0);
+    box-shadow: none;
+}
+
+.auth-btn {
+    height: 2.5rem;
+    background-color: white;
+    border: 1px solid lightgrey;
+    border-radius: 20%;
+}
+
+.modal-content {
+    width: 20rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.modal-body {
+    border-radius: 15%;
+    background-color: white;
+}
+
+.modal-body button {
+    width: 6rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    margin-right: 2rem;
+}
+
+.pagination {
+    width: fit-content;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    margin-left: 45%;
+    border: 1px solid lightgrey;
+    background-color: white;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.pagination a.active {
+  background-color: dodgerblue;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}

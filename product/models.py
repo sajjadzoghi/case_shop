@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Avg, Count
 
 from shop.utils import product_image_path, product_media_path
 
@@ -24,20 +24,8 @@ class Color(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
     class Meta:
-        verbose_name_plural = 'رنگ‌های مجصولات'
+        verbose_name_plural = 'رنگ‌ها'
         verbose_name = 'رنگ'
-
-    def __str__(self):
-        return self.name
-
-
-class Guarantee(models.Model):
-    name = models.CharField(max_length=200, unique=True)
-    amount = models.IntegerField()
-
-    class Meta:
-        verbose_name_plural = 'گارانتی مجصولات'
-        verbose_name = 'گارانتی'
 
     def __str__(self):
         return self.name
@@ -49,8 +37,7 @@ class Product(models.Model):
     # main image
     image = models.ImageField(upload_to=product_image_path)
     description = models.TextField()
-    color = models.ForeignKey(Color, on_delete=models.CASCADE, null=True)
-    guarantee = models.ForeignKey(Guarantee, on_delete=models.CASCADE, null=True)
+    colors = models.ManyToManyField(Color, blank=True, related_name='products')
     inventory = models.IntegerField(default=0)
     price = models.IntegerField()
 
@@ -66,21 +53,24 @@ class Product(models.Model):
         discounts = ProductDiscount.objects.all()
         for discount in discounts:
             if self in discount.products.all():
-                f_price = int(self.price - (self.price * discount.amount / 100))
-                if self.guarantee:
-                    return f_price + self.guarantee.amount
-                else:
-                    return f_price
+                return int(self.price - (self.price * discount.amount / 100))
         return self.price
 
     @property
-    def product_total_rate(self):
-        product = self.annotate(rates_average=Avg('product_rate'))
-        return product.rates_average
+    def voters_number(self):
+        product = Product.objects.filter(id=self.id).annotate(voters_num=Count('rates'))
+        return product[0].voters_num
+
+    @property
+    def rate_average(self):
+        product = Product.objects.filter(id=self.id).annotate(rates_avg=Avg('rates'))
+        if not product[0].rates_avg:
+            return 0
+        return product[0].rates_avg
 
 
+# product additional media: video or additional images
 class ProductMedia(models.Model):
-    # product additional media: video or additional images
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to=product_media_path)
     video = models.FileField(upload_to=product_media_path)
@@ -91,6 +81,20 @@ class ProductMedia(models.Model):
 
     def __str__(self):
         return self.product.name
+
+
+# Each product has its especial guarantees.
+class Guarantee(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='guarantees')
+    name = models.CharField(max_length=200, unique=True)
+    amount = models.IntegerField()
+
+    class Meta:
+        verbose_name_plural = 'گارانتی مجصولات'
+        verbose_name = 'گارانتی'
+
+    def __str__(self):
+        return self.name
 
 
 class ProductDiscount(models.Model):

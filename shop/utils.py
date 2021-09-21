@@ -1,8 +1,8 @@
 def product_image_path(instance, filename):
-    name = filename.split('.')
-    return f'{instance.category}/product-{instance.id}/{hash(name[0])}.{name[-1]}'
+    # file will be uploaded to MEDIA_ROOT/category/product-<name>/<filename>
+    return f'{instance.category.name}/product-{instance.name}/{filename}'
 
 
 def product_media_path(instance, filename):
-    name = filename.split('.')
-    return f'{instance.product.category}/product-{instance.product.id}/{hash(name[0])}.{name[-1]}'
+    # file will be uploaded to MEDIA_ROOT/category/product-<name>/<filename>
+    return f'{instance.product.category.name}/product-{instance.product.name}/{filename}'
