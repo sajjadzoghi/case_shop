@@ -40,7 +40,14 @@ class CustomUserManager(BaseUserManager):
 # Create your models here.
 class Customer(AbstractUser):
     username = None
-    mobile = models.CharField(_('mobile'), unique=True, max_length=11)
+    mobile = models.CharField(_('شماره موبایل'), unique=True, max_length=11,
+                              help_text=_('شماره موبایل خود را وارد کنید. مثال:09123456789'),
+                              error_messages={
+                                  'unique': _("این شماره قبلا توسط کاربری دیگر ثبت شده‌است."),
+                              })
+    first_name = models.CharField(_('نام'), max_length=150)
+    last_name = models.CharField(_('نام‌خانوادگی'), max_length=150)
+    email = models.EmailField(_('ایمیل'), unique=True)
 
     USERNAME_FIELD = 'mobile'
     REQUIRED_FIELDS = ['first_name', 'last_name']

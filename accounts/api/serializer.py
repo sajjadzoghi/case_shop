@@ -7,4 +7,4 @@ Customer = get_user_model()
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = '__all__'
+        fields = ['mobile', 'first_name', 'last_name', 'email', 'password']
