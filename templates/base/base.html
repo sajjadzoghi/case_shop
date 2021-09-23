@@ -108,25 +108,30 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-body">
-                    <form method="POST" action="" id="register-form">
-                        <div class="form-group">
-                            <label for="mobile">:شماره موبایل</label>
-                            <input type="text" class="form-control" name="mobile" id="mobile" maxlength="11" required>
+                    <form method="POST" action="{% url 'get_info' %}" id="register-form" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group" id="mobile-group">
+                            <label for="reg-mobile">:شماره موبایل</label>
+                            <input type="text" class="form-control" name="reg-mobile" id="reg-mobile" required>
                         </div>
                         <div class="form-group">
-                            <label for="mobile">:نام</label>
-                            <input type="text" class="form-control" name="mobile" id="mobile" maxlength="11" required>
+                            <label for="firstname">:نام</label>
+                            <input type="text" class="form-control" name="firstname" id="firstname" required>
                         </div>
                         <div class="form-group">
-                            <label for="mobile">:نام‌خانوادگی</label>
-                            <input type="text" class="form-control" name="mobile" id="mobile" maxlength="11" required>
+                            <label for="lastname">:نام‌خانوادگی</label>
+                            <input type="text" class="form-control" name="lastname" id="lastname" required>
                         </div>
                         <div class="form-group">
-                            <label for="mobile">:ایمیل</label>
-                            <input type="text" class="form-control" name="mobile" id="mobile" maxlength="11" required>
+                            <label for="email">:ایمیل</label>
+                            <input type="email" class="form-control" name="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-password">:رمز عبور</label>
+                            <input type="password" class="form-control" name="reg-password" id="reg-password" required>
                         </div>
                         <div class="btn-group">
-                            <button type="submit" class="btn btn-primary mr-3" data-dismiss="modal" id="check-otp-btn">
+                            <button type="submit" class="btn btn-primary mr-3" id="send-info-btn">
                                 تکمیل ثبت نام
                             </button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
@@ -136,34 +141,12 @@
             </div>
         </div>
     </div>
-    {#    <div class="modal fade" id="register-modal">#}
-    {#        <div class="modal-dialog modal-lg">#}
-    {#            <div class="modal-content">#}
-    {#                <div class="modal-body">#}
-    {#                    <form method="POST" action="" id="tour-form">#}
-    {#                        <div class="form-group">#}
-    {#                            <label for="mobile">:شماره موبایل</label>#}
-    {#                            <input type="text" class="form-control" name="mobile" id="mobile" maxlength="11">#}
-    {#                        </div>#}
-    {#                        <div class="form-group">#}
-    {#                            <label for="password">:رمز عبور</label>#}
-    {#                            <input type="text" class="form-control" name="password" id="password">#}
-    {#                        </div>#}
-    {#                        <div class="btn-group">#}
-    {#                            <button type="button" class="btn btn-primary mr-3" data-dismiss="modal" id="add-user-btn"> ثبت نام#}
-    {#                            </button>#}
-    {#                            <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>#}
-    {#                        </div>#}
-    {#                    </form>#}
-    {#                </div>#}
-    {#            </div>#}
-    {#        </div>#}
-    {#    </div>#}
     <div class="modal fade" id="login-modal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-body">
                     <form method="POST" action="" id="login-form">
+                        {% csrf_token %}
                         <div class="form-group">
                             <label for="mobile">:شماره موبایل</label>
                             <input type="text" class="form-control" name="mobile" id="mobile" maxlength="11">

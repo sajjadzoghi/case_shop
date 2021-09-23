@@ -16,6 +16,9 @@ p, a, h5, h4, h6 {
     text-align: right;
 }
 
+input {
+    text-align: right;
+}
 
 .nav-link {
     border-radius: 5%;
@@ -271,20 +274,42 @@ i:hover {
     margin-bottom: 2rem;
     margin-left: 45%;
     border: 1px solid lightgrey;
+    border-radius: 5%;
+}
+
+.pagination button {
     background-color: white;
+    border: none;
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
 }
 
-.pagination a {
-  color: black;
-  float: left;
-  padding: 8px 16px;
-  text-decoration: none;
-  transition: background-color .3s;
+.pagination #previous {
+    width: fit-content;
+    border-bottom-left-radius: 10%;
+    border-top-left-radius: 10%;
 }
 
-.pagination a.active {
-  background-color: dodgerblue;
-  color: white;
+.pagination #next {
+    width: fit-content;
+    border-bottom-right-radius: 10%;
+    border-top-right-radius: 10%;
 }
 
-.pagination a:hover:not(.active) {background-color: #ddd;}
+
+.pagination button.active {
+    background-color: dodgerblue;
+    color: white;
+}
+
+.pagination button:hover {
+    background-color: #ddd;
+    border: none;
+}
+
+#next, #previous {
+    font-size: 20px;
+}

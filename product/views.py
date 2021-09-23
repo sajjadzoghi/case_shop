@@ -1,14 +1,12 @@
 from django.shortcuts import render
-from django.views import generic
+from django.views import View
+from django.views.generic import TemplateView
+
 from product.models import Product
 
 
 # Create your views here.
 
 
-class AllProductView(generic.ListView):
+class AllProductView(TemplateView):
     template_name = 'product/all-products.html'
-    context_object_name = 'all_products'
-
-    def get_queryset(self):
-        return Product.objects.all()
