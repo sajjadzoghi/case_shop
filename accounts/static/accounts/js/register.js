@@ -2,61 +2,74 @@ $('#register-form').submit(function (e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
 
     var form = $(this);
-    console.log(form)
-
     var url = form.attr('action');
-    var form_data = new FormData(this);
-    console.log(form_data);
+    var form_data = {
+        'mobile': $('#reg-mobile').val(),
+        'first_name': $('#first_name').val(),
+        'last_name': $('#last_name').val(),
+        'email': $('#email').val(),
+        'password': $('#reg-password').val(),
+    };
 
     $.ajax({
         type: "post",
         url: url,
         data: form_data,
         success: function (resp) {
-            console.log(resp)
-            if (typeof resp.detail !== 'undefined') {
-                $('#register-form > .form-group').hide('fast');
-                $('#send-info-btn').attr('id', 'verify-otp-btn');
-                $('#verify-otp-btn').html('ارسال');
-                $('#register-form').append(`<div class="form-group" id="otp-group">
-                            <label for="otp">:کد تایید ارسال‌شده به گوشی را وارد کنید</label>
-                            <input type="number" class="form-control" name="otp" id="otp" maxlength="6">
-                        </div>`)
-                $('#otp-group').show('fast');
-            } else {
-                $('#mobile-group').append(`<p>${resp.detail}</p>`)
-            }
-
-            $('#register-form').trigger('reset');
+            // $('#send-info-btn').attr('data-dismiss', 'modal');
+            $('#register-modal').modal('hide');
+            $('#otp-form #otp-group').show();
+            $('#otp-btn-group').show();
+            $('#otp-form h5').remove();
+            $('#otp-form #close').remove();
+            $('#otp-form #otp-again').remove();
+            $('#otp-modal').modal('show');
+            $('form p').remove();
         },
-        cache: false,
-        contentType: false,
-        processData: false
-
+        error: function (data) {
+            $('form p').remove();
+            let errors = JSON.parse(data.responseText);
+            for (let error_item in errors) {
+                $(form).prepend(`<p class="text-danger">${errors[error_item][0]}*</p>`);
+            }
+        }
     });
 
 });
 
-$('#verify-otp-btn').click(function (e) {
+$('#otp-form').submit(function (e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
 
-    let register_form = $('#register-form')
-    let data = register_form.serialize();
+    let form = $(this)
+    let form_data = {
+        'mobile': $('#reg-mobile').val(),
+        'first_name': $('#first_name').val(),
+        'last_name': $('#last_name').val(),
+        'email': $('#email').val(),
+        'password': $('#reg-password').val(),
+        'otp': $('#otp').val(),
+    };
 
     $.ajax({
         type: "Post",
         url: `http://127.0.0.1:8000/api/v1/accounts/verify/`,
-        data: data,
+        data: form_data,
         success: function (resp) {
-            if (typeof resp.detail !== 'undefined') {
-                $('#register-form > .form-group').hide('fast');
-                $('#register-form').append(`<p>${resp.approved}</p>`)
-            } else {
-                $('#otp-group').append(`<p>${resp.detail}</p>`)
-            }
+            $('form #otp-group').hide('slow');
+            $('form #otp-btn-group').hide('slow');
+            $(form).trigger('reset');
+            $('form p').remove();
+            $(form).prepend(`<h5 class="text-success">«${$('#first_name').val()} عزیز، ثبت‌نام شما با موفقیت انجام شد»</h5>`);
+            $(form).append(`<button type="button" id="close" class="btn btn-danger" data-dismiss="modal">بستن</button>`);
+            $('#register-form').trigger('reset');
         },
-        cache: false,
-        contentType: false,
-        processData: false
-    })
+        error: function (data) {
+            $('form p').remove();
+            let errors = JSON.parse(data.responseText);
+            for (let error_item in errors) {
+                $(form).prepend(`<p class="text-danger">${errors[error_item][0]}*</p>`);
+            }
+            $(form).append(`<button id="otp-again" onclick="$('#register-form').submit()" class="text-danger">ارسال مجدد</button>`);
+        }
+    });
 });

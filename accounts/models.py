@@ -16,7 +16,7 @@ class CustomUserManager(BaseUserManager):
         Create and save a User with the given mobile and password.
         """
         if not mobile:
-            raise ValueError(_('The mobile must be set'))
+            raise ValueError(_('شماره موبایل وارد نشده!'))
         user = self.model(mobile=mobile, **extra_fields)
         user.set_password(password)
         user.save()
@@ -40,11 +40,7 @@ class CustomUserManager(BaseUserManager):
 # Create your models here.
 class Customer(AbstractUser):
     username = None
-    mobile = models.CharField(_('شماره موبایل'), unique=True, max_length=11,
-                              help_text=_('شماره موبایل خود را وارد کنید. مثال:09123456789'),
-                              error_messages={
-                                  'unique': _("این شماره قبلا توسط کاربری دیگر ثبت شده‌است."),
-                              })
+    mobile = models.CharField(_('شماره موبایل'), unique=True, max_length=11,)
     first_name = models.CharField(_('نام'), max_length=150)
     last_name = models.CharField(_('نام‌خانوادگی'), max_length=150)
     email = models.EmailField(_('ایمیل'), unique=True)
