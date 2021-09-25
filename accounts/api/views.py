@@ -2,7 +2,7 @@
 import base64
 import time
 from datetime import datetime
-
+# from kavenegar import *
 import pyotp
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
@@ -16,14 +16,25 @@ from accounts.api.serializer import CustomerSerializer
 Customer = get_user_model()
 
 
-class CustomerView(generics.ListCreateAPIView):
-    queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
+class CustomerView(APIView):
+
+    def get(self, request):
+        customers = Customer.objects.all()
+        serializer = CustomerSerializer(customers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        print(request.data)
+        serializer = CustomerSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class generateKey:
+class GenerateKey:
     @staticmethod
-    def returnValue(phone):
+    def value(phone):
         return str(phone) + str(datetime.date(datetime.now()))
 
 
@@ -32,37 +43,38 @@ class GetInfo(APIView):
     # permission_classes = [NotAuthenticated]
 
     def post(self, request):
-        print(request.data)
-        print(request.POST)
         serializer = CustomerSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         info = serializer.validated_data
-        try:
-            customer = Customer.objects.get(
-                mobile=info['mobile'])  # if Mobile already exists the take this else create New One
-            if customer.exists():
-                return Response({'detail': 'این شماره موبایل قبلا ثبت شده‌است.'}, )
-        except Customer.DoesNotExist:
-            keygen = generateKey()
-            key = base64.b32encode(keygen.returnValue(info['mobile']).encode())  # Key is generated
-            totp = pyotp.TOTP(key, interval=90)  # TOTP Model for OTP is created
-            print(totp.now())
-            # using multi-threading send the OTP using messaging services like kavenegar, Ghasedak,...
-            return Response(info, status=status.HTTP_200_OK)
+        keygen = GenerateKey()
+        key = base64.b32encode(keygen.value(info['mobile']).encode())  # Key is generated
+        totp = pyotp.TOTP(key, interval=90)  # TOTP Model for OTP is created
+        print(totp.now())  # only for cheating
+
+        """
+        using multi-threading send the OTP using messaging services like kavenegar, Ghasedak,...
+        """
+        # api = KavenegarAPI('33524B76642B4F4759646D66573648666B3575756D6E6A6D785A47662B4444524A5669664E564C71626D413D')
+        # params = {'sender': '100047778', 'receptor': info['mobile'], 'message': f'کد تایید عضویت شما در کالاشاپ: {totp.now()}'}
+        # response = api.sms_send(params)
+        return Response(status=status.HTTP_200_OK)
 
 
 class VerifyOTP(APIView):
     # verifying the OTP
     def post(self, request):
-        keygen = generateKey()
-        key = base64.b32encode(keygen.returnValue(request.data['mobile']).encode())  # Generating Key
+        keygen = GenerateKey()
+        key = base64.b32encode(keygen.value(request.data['mobile']).encode())  # Generating Key
         totp = pyotp.TOTP(key, interval=90)  # TOTP Model for OTP is created
 
-        serializer = CustomerSerializer(data=request.data)
-        if serializer.is_valid():
-            info = serializer.validated_data
-            if totp.verify(info["otp"]):  # Verifying the OTP
-                Customer.save()
-                return Response({'approved': 'ثبت‌نام باموفقیت انجام شد'}, status=200)
-            return Response({'detail': 'کد واردشده اشتباه بود. دوباره امتحان کنید.'}, status=400)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if totp.verify(request.data['otp']):
+            info = self.customer_data(request.data)
+            serializer = CustomerSerializer(data=info)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response({'otp': ['.کد واردشده اشتباه است']}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+    @staticmethod
+    def customer_data(info):
+        return {item: info[item] for item in info if item != 'otp'}
