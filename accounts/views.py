@@ -1,4 +1,4 @@
-from django.contrib.auth import login, get_user_model
+from django.contrib.auth import login, get_user_model, logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from accounts.forms import LoginForm
@@ -18,6 +18,11 @@ def login_view(request):
                 HttpResponseRedirect(request.GET['next'])
             return redirect('product:all_product')
 
-    return render(request, 'base/base.html', context={
+    return render(request, 'accounts/login.html', context={
         'login_form': login_form
     })
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('product:all_product')

@@ -52,7 +52,7 @@ $('#otp-form').submit(function (e) {
 
     $.ajax({
         type: "Post",
-        url: `http://127.0.0.1:8000/api/v1/accounts/verify/`,
+        url: `http://127.0.0.1:8000/api/v1/accounts/verify-otp/`,
         data: form_data,
         success: function (resp) {
             $('form #otp-group').hide('slow');
