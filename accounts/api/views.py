@@ -11,8 +11,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.api.serializer import RegistrationSerializer, ChangePasswordSerializer, ResetPasswordByMobile, \
-    ResetPasswordByEmail
+from accounts.api.serializer import (RegistrationSerializer, ChangePasswordSerializer, ConfirmResetPasswordSerializer,
+                                     ResetPasswordByMobileSerializer,
+                                     ResetPasswordByEmailSerializer)
 from shop.utils import send_reset_password_mail
 
 Customer = get_user_model()
@@ -70,6 +71,7 @@ class GetInfo(APIView):
 
 class VerifyOTP(APIView):
     # verifying the OTP
+
     def post(self, request):
         keygen = GenerateKey()
         key = base64.b32encode(keygen.value(request.data['mobile']).encode())  # Generating Key
@@ -85,9 +87,8 @@ class VerifyOTP(APIView):
 
 
 class ChangePasswordView(generics.UpdateAPIView):
-    """
-    An endpoint for changing password.
-    """
+    # An endpoint for changing password.
+
     queryset = Customer.objects.all()
     serializer_class = ChangePasswordSerializer
     permission_classes = (IsAuthenticated,)
@@ -110,67 +111,83 @@ class ChangePasswordView(generics.UpdateAPIView):
     #     return Response(status=status.HTTP_200_OK)
 
 
-class ResetPassword(APIView):
-
-    def get_object(self, request):
+class GetCustomer():
+    @staticmethod
+    def value(data):
         try:
-            return Customer.objects.get(Q(mobile=request.data['mobile']) | Q(email=request.data['email']))
+            return Customer.objects.get(Q(mobile=data) | Q(email=data))
         except Customer.DoesNotExist:
             return Response({'customer': ['کاربری با مشخصات داده‌شده پیدا نشد']}, status=status.HTTP_404_NOT_FOUND)
 
+
+class RequestResetPasswordMobile(APIView):
+    # request reset password by Mobile number
+
     def post(self, request):
-        if request.data['mobile']:
-            customer = self.get_object(request)
-            serializer = ResetPasswordByMobile(customer, data=request.data)
-            serializer.is_valid(raise_exception=True)
-            info = serializer.validated_data
-            keygen = GenerateKey()
-            key = base64.b32encode(keygen.value(info['mobile']).encode())  # Key is generated
-            totp = pyotp.TOTP(key, interval=120)  # TOTP Model for OTP is created
-            print(totp.now())  # only for cheating
-            """
-            using multi-threading send the OTP using messaging services like kavenegar, Ghasedak,...
-            """
-            return Response(status=status.HTTP_200_OK)
+        customer = GetCustomer.value(request.data['mobile'])
+        # if request.data['mobile']:
+        # try:
+        #     customer = Customer.objects.get(mobile=request.data['mobile'])
+        # except Customer.DoesNotExist:
+        #     return Response({'customer': ['کاربری با مشخصات داده‌شده پیدا نشد']}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ResetPasswordByMobileSerializer(customer, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        info = serializer.validated_data
+        keygen = GenerateKey()
+        key = base64.b32encode(keygen.value(info['mobile']).encode())  # Key is generated
+        totp = pyotp.TOTP(key, interval=120)  # TOTP Model for OTP is created
+        print(totp.now())  # only for cheating
 
-        elif request.data['email']:
-            customer = self.get_object(request)
-            serializer = ResetPasswordByEmail(customer, data=request.data)
-            serializer.is_valid(raise_exception=True)
-            info = serializer.validated_data
-            keygen = GenerateKey()
-            key = base64.b32encode(keygen.value(info['email']).encode())  # Key is generated
-            totp = pyotp.TOTP(key, interval=90)  # TOTP Model for OTP is created
+        # using multi-threading send the OTP using messaging services like kavenegar, Ghasedak,...
+        return Response({'mobile': info['mobile']}, status=status.HTTP_200_OK)
 
-            # using multi-threading send the OTP using Email services
-            send_reset_password_mail(
-                subject='درخواست بازیابی رمز عبور',
-                message=f'کد تایید شما جهت احراز هویت: {totp.now()}',
-                recipient_list=[info['email']]
-            )  # using multi-threading send the OTP using Email services
-            return Response(status=status.HTTP_200_OK)
+
+class RequestResetPasswordEmail(APIView):
+    # request reset password by Email
+
+    def post(self, request):
+        customer = GetCustomer.value(request.data['email'])
+        # try:
+        #     customer = Customer.objects.get(email=request.data['email'])
+        # except Customer.DoesNotExist:
+        #     return Response({'customer': ['کاربری با مشخصات داده‌شده پیدا نشد']}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ResetPasswordByEmailSerializer(customer, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        info = serializer.validated_data
+        keygen = GenerateKey()
+        key = base64.b32encode(keygen.value(info['email']).encode())  # Key is generated
+        totp = pyotp.TOTP(key, interval=120)  # TOTP Model for OTP is created
+
+        # using multi-threading send the OTP using Email services
+        send_reset_password_mail(
+            subject='درخواست بازیابی رمز عبور',
+            message=f'{totp.now()}{customer.first_name} عزیز، درخواست شما برای بازیابی رمز عبور دریافت شد. کد تایید شما جهت احراز هویت: ',
+            recipient_list=[info['email']]
+        )  # using multi-threading send the OTP using Email services
+        return Response({'email': info['email']}, status=status.HTTP_200_OK)
 
 
 class VerifyOTPResetPassword(APIView):
     # verifying the OTP
 
-    def get_object(self, request):
-        return Customer.objects.get(Q(mobile=request.data['mobile']) | Q(email=request.data['email']))
-
     def post(self, request):
-        if request.data['mobile']:
-            keygen = GenerateKey()
-            key = base64.b32encode(keygen.value(request.data['mobile']).encode())  # Generating Key
-            totp = pyotp.TOTP(key, interval=120)  # TOTP Model for OTP is created
-        else:
-            keygen = GenerateKey()
-            key = base64.b32encode(keygen.value(request.data['email']).encode())  # Generating Key
-            totp = pyotp.TOTP(key, interval=120)  # TOTP Model for OTP is created
+        keygen = GenerateKey()
+        key = base64.b32encode(keygen.value(request.data['info']).encode())  # Generating Key
+        totp = pyotp.TOTP(key, interval=120)  # TOTP Model for OTP is created
 
         if totp.verify(request.data['otp']):
-            info = CustomerData.value(request.data)
-            serializer = ResetPasswordByMobile(data=info)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(status=status.HTTP_200_OK)
+            customer = Customer.objects.get(Q(mobile=request.data['info']) | Q(email=request.data['info']))
+            return Response({'mobile': customer.mobile,
+                             'first_name': customer.first_name}, status=status.HTTP_200_OK)
         return Response({'otp': ['.کد واردشده اشتباه است']}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+class ConfirmResetPassword(APIView):
+    # verifying the new password
+
+    def post(self, request):
+        customer = Customer.objects.get(mobile=request.data['mobile'])
+        serializer = ConfirmResetPasswordSerializer(customer, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'first_name': customer.first_name}, status=status.HTTP_200_OK)

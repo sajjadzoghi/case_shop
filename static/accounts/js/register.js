@@ -15,8 +15,7 @@ $('#register-form').submit(function (e) {
         type: "post",
         url: url,
         data: form_data,
-        success: function (resp) {
-            // $('#send-info-btn').attr('data-dismiss', 'modal');
+        success: function () {
             $('#register-modal').modal('hide');
             $('#otp-form #otp-group').show();
             $('#otp-btn-group').show();
@@ -24,10 +23,10 @@ $('#register-form').submit(function (e) {
             $('#otp-form #close').remove();
             $('#otp-form #otp-again').remove();
             $('#otp-modal').modal('show');
-            $('form p').remove();
+            $('#register-form p').remove();
         },
         error: function (data) {
-            $('form p').remove();
+            $('#register-form p').remove();
             let errors = JSON.parse(data.responseText);
             for (let error_item in errors) {
                 $(form).prepend(`<p class="text-danger">${errors[error_item][0]}*</p>`);
@@ -40,7 +39,8 @@ $('#register-form').submit(function (e) {
 $('#otp-form').submit(function (e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
 
-    let form = $(this)
+    let form = $(this);
+    let url = form.attr('action');
     let form_data = {
         'mobile': $('#reg-mobile').val(),
         'first_name': $('#first_name').val(),
@@ -52,19 +52,19 @@ $('#otp-form').submit(function (e) {
 
     $.ajax({
         type: "Post",
-        url: `http://127.0.0.1:8000/api/v1/accounts/verify-otp/`,
+        url: url,
         data: form_data,
         success: function (resp) {
-            $('form #otp-group').hide('slow');
-            $('form #otp-btn-group').hide('slow');
+            $('#otp-form #otp-group').hide('slow');
+            $('#otp-form #otp-btn-group').hide('slow');
             $(form).trigger('reset');
-            $('form p').remove();
+            $('#otp-form p').remove();
             $(form).prepend(`<h5 class="text-success">«${$('#first_name').val()} عزیز، ثبت‌نام شما با موفقیت انجام شد»</h5>`);
             $(form).append(`<button type="button" id="close" class="btn btn-danger" data-dismiss="modal">بستن</button>`);
             $('#register-form').trigger('reset');
         },
         error: function (data) {
-            $('form p').remove();
+            $('#otp-form p').remove();
             let errors = JSON.parse(data.responseText);
             for (let error_item in errors) {
                 $(form).prepend(`<p class="text-danger">${errors[error_item][0]}*</p>`);
