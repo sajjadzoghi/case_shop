@@ -43,7 +43,9 @@
                                             class="fa fa-fw fa-user-circle-o"></i></a><br>
                                     <a href="#" style="font-size: 14px">سفارش‌های من<i
                                             class="fa fa-fw fa-shopping-bag"></i></a><br>
-                                    <a href="#" style="font-size: 14px">خروج از حساب کاربری<i
+                                    <a href="{% url 'change_password' %}" style="font-size: 14px">تغییر رمز عبور<i
+                                            class="fa fa-fw fa-shopping-bag"></i></a><br>
+                                    <a href="{% url 'accounts:logout' %}" style="font-size: 14px">خروج از حساب کاربری<i
                                             class="fa fa-fw fa-sign-out"></i></a>
                                 </div>
                             </div>
@@ -54,9 +56,8 @@
                         <button class="auth-btn" data-toggle="modal"
                                 data-target="#register-modal">ثبت‌نام
                         </button>
-                        <button class="auth-btn" data-toggle="modal"
-                                data-target="#login-modal">ورود<i class="fa fa-fw fa-user"
-                                                                  style="font-size:18px"></i></button>
+                        <button class="auth-btn"><a href="{% url 'accounts:login' %}">ورود<i class="fa fa-fw fa-user"
+                                                                  style="font-size:18px"></i></a></button>
                     </div>
                 {% endif %}
                 <div style="height: 1.5rem;border: 0.001mm ridge silver;margin-right: 10px;margin-top: 5px"></div>
@@ -66,11 +67,6 @@
                 </div>
             </div>
             <ul class="navbar-nav ml-auto">
-                <li>
-                    <i class="fa fa-fw fa-map-marker" style="font-size:20px;margin-top: 1rem"></i>
-                </li>
-
-
                 <li class="nav-item">
                     <a class="nav-link" href="#">تماس با کالاشاپ<i class="fa fa-fw fa-phone"></i></a>
                 </li>
@@ -131,10 +127,10 @@
                             <input type="text" class="form-control" name="reg-password" id="reg-password">
                         </div>
                         <div class="btn-group" id="reg-btn-group">
-                            <button type="submit" class="btn btn-primary mr-3" id="send-info-btn">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
+                            <button type="submit" class="btn btn-submit mr-3" id="send-info-btn">
                                 تکمیل ثبت نام
                             </button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
                         </div>
                     </form>
                 </div>
@@ -152,38 +148,10 @@
                             <input type="number" class="form-control" name="otp" id="otp" maxlength="6" minlength="6">
                         </div>
                         <div class="btn-group" id="otp-btn-group">
-                            <button type="submit" class="btn btn-primary mr-3" id="verify-otp-btn">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
+                            <button type="submit" class="btn btn-submit mr-3" id="verify-otp-btn">
                                 ارسال
                             </button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="login-modal">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <form method="POST" action="" id="login-form">
-
-                        <div class="form-group">
-                            <label for="mobile">:شماره موبایل</label>
-                            <input type="text" class="form-control" name="mobile" id="mobile" maxlength="11"
-                                   minlength="11" required
-                                   oninvalid="this.setCustomValidity('شماره موبایل به درستی وارد نشده.')"
-                                   oninput="this.setCustomValidity('')">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">:رمز عبور</label>
-                            <input type="text" class="form-control" name="password" id="password" required>
-                        </div>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary mr-3" data-dismiss="modal" id="add-btn">ورود به
-                                کالاشاپ
-                            </button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
                         </div>
                     </form>
                 </div>
@@ -192,24 +160,6 @@
     </div>
     <div class="row">
         <div class="col-12 col-md-9">
-            <div class="row ord-row">
-                <div class="col-12">
-                    <p style="padding-right: 2px">فروشگاه اینترنتی کالاشاپ / کالای دیجیتال / موبایل /
-                        گوشی</p>
-                    <div class="card ord-card">
-                        <div class="card-body row flex-row-reverse">
-                            <p class="card-text">:مرتب سازی براساس&nbsp<i class="fa fa-fw fa-list-ol"></i></p>
-                            <div class="ord-links">
-                                <button href="#">ارزان‌ترین</button>
-                                <button href="#">گران‌ترین</button>
-                                <button href="#">پرفروش‌ترین</button>
-                                <button href="#" class="bg-primary text-light">جدید‌ترین</button>
-                                <button href="#">پربازدید‌ترین</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             {% block content %}{% endblock %}
             {% block pagination %}{% endblock %}
         </div>

@@ -4,6 +4,12 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 
+from django.core.mail import EmailMultiAlternatives
+from django.dispatch import receiver
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django_rest_passwordreset.signals import reset_password_token_created
+
 
 class CustomUserManager(BaseUserManager):
     """
@@ -40,7 +46,7 @@ class CustomUserManager(BaseUserManager):
 # Create your models here.
 class Customer(AbstractUser):
     username = None
-    mobile = models.CharField(_('شماره موبایل'), unique=True, max_length=11,)
+    mobile = models.CharField(_('شماره موبایل'), unique=True, max_length=11, )
     first_name = models.CharField(_('نام'), max_length=150)
     last_name = models.CharField(_('نام‌خانوادگی'), max_length=150)
     email = models.EmailField(_('ایمیل'), unique=True)
@@ -73,3 +79,42 @@ class Address(models.Model):
     class Meta:
         verbose_name_plural = 'آدرس‌ها'
         verbose_name = 'آدرس'
+
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+    """
+    Handles password reset tokens
+    When a token is created, an e-mail needs to be sent to the user
+    :param sender: View Class that sent the signal
+    :param instance: View Instance that sent the signal
+    :param reset_password_token: Token Model Object
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    # send an e-mail to the user
+    context = {
+        'current_user': reset_password_token.user,
+        'username': reset_password_token.user.username,
+        'email': reset_password_token.user.email,
+        'reset_password_url': "{}?token={}".format(
+            instance.request.build_absolute_uri(reverse('password_reset:reset-password-confirm')),
+            reset_password_token.key)
+    }
+
+    # render email text
+    email_plaintext_message = render_to_string('email/user_reset_password.txt', context)
+
+    msg = EmailMultiAlternatives(
+        # title:
+        "Password Reset for {title}".format(title="Some website title"),
+        # message:
+        email_plaintext_message,
+        # from:
+        "noreply@somehost.local",
+        # to:
+        [reset_password_token.user.email]
+    )
+    msg.attach_alternative(email_plaintext_message, "text/html")
+    msg.send()

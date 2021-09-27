@@ -11,9 +11,14 @@ body {
     font-family: "Weblogma_Yekan";
 }
 
-p, a, h5, h4, h6 {
+p, a, h5, h4, h6, button {
     color: #7b7a7a;
     text-align: right;
+}
+
+button:hover, a:hover {
+    text-decoration: none;
+    color: unset;
 }
 
 input {
@@ -151,6 +156,7 @@ i:hover {
 .container-fluid {
     padding-top: 9%;
     background-color: whitesmoke;
+    height: 100%;
     text-align: right;
 
 }
@@ -193,8 +199,8 @@ i:hover {
 .content-row .card {
     border-radius: 0;
     height: 28rem;
+    padding: unset;
 }
-
 
 .content-row .card:hover {
     box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.2);
@@ -261,11 +267,18 @@ i:hover {
     background-color: white;
 }
 
-.modal-body button {
-    width: 6rem;
+#register-form button, #login-form button, #otp-form button {
+    border: none;
+    height: 2.5rem;
+    width: 7rem;
     margin-top: 2rem;
     margin-bottom: 2rem;
-    margin-right: 2rem;
+    margin-right: 1.5rem;
+}
+
+.btn-submit {
+    background-color: #1e347b;
+    color: white;
 }
 
 .pagination {
