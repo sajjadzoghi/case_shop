@@ -6,6 +6,104 @@
     <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
 {% endblock %}
 
+{% block modal %}
+    <div class="modal fade" id="reset-password-mobile-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'reset_password_mobile' %}" id="reset-password-mobile-form" enctype="multipart/form-data">
+
+                        <div class="form-group" id="reset-password-mobile-group">
+                            <label for="reset-password-mobile">:شماره موبایل کاربری خود را وارد کنید</label>
+                            <input type="text" class="form-control" name="reset-password-mobile" id="reset-password-mobile">
+                        </div>
+                        <div class="btn-group" id="reset-password-mobile-btn-group">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
+                            <button type="submit" class="btn btn-submit mr-3">
+                                ارسال
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="reset-password-email-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'reset_password_email' %}" id="reset-password-email-form" enctype="multipart/form-data">
+
+                        <div class="form-group" id="reset-password-email-group">
+                            <label for="reset-password-email">:ایمیل کاربری خود را وارد کنید</label>
+                            <input type="text" class="form-control" name="reset-password-email" id="reset-password-email">
+                        </div>
+                        <div class="btn-group" id="reset-password-email-btn-group">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
+                            <button type="submit" class="btn btn-submit mr-3">
+                                ارسال
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="reset-password-otp-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'verify_otp_reset_password' %}" id="reset-password-otp-form" enctype="multipart/form-data">
+                        <div class="form-group" id="reset-password-otp-group">
+                            <label for="reset-password-otp"></label>
+                            <input type="number" class="form-control" name="reset-password-otp" id="reset-password-otp" maxlength="6" minlength="6">
+                        </div>
+                        <div class="form-group d-none" id="reset-user-group">
+                            <label for="reset-user"></label>
+                            <input type="text" class="form-control" name="reset-user" id="reset-user">
+                        </div>
+                        <div class="form-group d-none" id="auth-type-group">
+                            <label for="auth-type"></label>
+                            <input type="text" class="form-control" name="auth-type" id="auth-type">
+                        </div>
+                        <div class="btn-group" id="reset-password-otp-btn-group">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
+                            <button type="submit" class="btn btn-submit mr-3">
+                                ارسال
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="new-reset-password-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'confirm_reset_password' %}" id="new-reset-password-form" enctype="multipart/form-data">
+
+                        <div class="form-group" id="new-reset-password-group">
+                            <label for="new-reset-password"></label>
+                            <input type="text" class="form-control" name="new-reset-password" id="new-reset-password">
+                        </div>
+                        <div class="form-group d-none" id="reset-user-final-group">
+                            <label for="reset-user-final"></label>
+                            <input type="text" class="form-control" name="reset-user-final" id="reset-user-final">
+                        </div>
+                        <div class="btn-group" id="new-reset-password-btn-group">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
+                            <button type="submit" class="btn btn-submit mr-3">
+                                ارسال
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block content %}
     <div class="row content-row">
         <div class="card col-10">

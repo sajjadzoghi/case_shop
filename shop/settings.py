@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'drf_yasg',  # required for serving swagger ui's css/js files
     'rest_framework',
     'rest_framework_simplejwt',
-    'django_rest_passwordreset',
     'django_cleanup',
     # project application
     'accounts',

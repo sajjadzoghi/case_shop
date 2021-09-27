@@ -102,7 +102,7 @@ class UpdateCustomerSerializer(serializers.ModelSerializer):
         return instance
 
 
-class ResetPasswordByMobile(serializers.ModelSerializer):
+class ResetPasswordByMobileSerializer(serializers.ModelSerializer):
     mobile = serializers.CharField(min_length=11, max_length=11, error_messages={'blank': '.شماره موبایل وارد نشده',
                                                                                  'min_length': '.شماره موبایل نامعتبر است',
                                                                                  'max_length': '.شماره موبایل نامعتبر است'}, )
@@ -112,23 +112,21 @@ class ResetPasswordByMobile(serializers.ModelSerializer):
         fields = ['mobile']
 
 
-class ResetPassword(serializers.ModelSerializer):
+class ResetPasswordByEmailSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(error_messages={'blank': '.ایمیل وارد نشده', }, )
-    mobile = serializers.CharField(min_length=11, max_length=11, error_messages={'blank': '.شماره موبایل وارد نشده',
-                                                                                 'min_length': '.شماره موبایل نامعتبر است',
-                                                                                 'max_length': '.شماره موبایل نامعتبر است'}, )
 
     class Meta:
         model = Customer
         fields = ['email']
 
 
-class ConfirmResetPassword(serializers.ModelSerializer):
+class ConfirmResetPasswordSerializer(serializers.ModelSerializer):
+    mobile = serializers.CharField()
     new_password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
 
     class Meta:
         model = Customer
-        fields = ['new_password']
+        fields = ['mobile', 'new_password']
 
     def update(self, instance, validated_data):
         instance.set_password(validated_data['new_password'])
