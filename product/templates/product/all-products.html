@@ -9,30 +9,52 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row ord-row">
-        <div class="col-12">
-            <p style="padding-right: 2px">فروشگاه اینترنتی کالاشاپ / کالای دیجیتال / موبایل /
-                گوشی</p>
-            <div class="card ord-card">
-                <div class="card-body row flex-row-reverse">
-                    <p class="card-text">:مرتب سازی براساس&nbsp<i class="fa fa-fw fa-list-ol"></i></p>
-                    <div class="ord-links">
-                        <button href="#">ارزان‌ترین</button>
-                        <button href="#">گران‌ترین</button>
-                        <button href="#">پرفروش‌ترین</button>
-                        <button href="#" class="bg-primary text-light">جدید‌ترین</button>
-                        <button href="#">پربازدید‌ترین</button>
+    <div class="row">
+        <div class="col-12 col-md-9">
+            <div class="row ord-row">
+                <div class="col-12">
+                    <p style="padding-right: 2px">فروشگاه اینترنتی کالاشاپ / کالای دیجیتال / موبایل /
+                        گوشی</p>
+                    <div class="card ord-card">
+                        <div class="card-body row flex-row-reverse">
+                            <p class="card-text">:مرتب سازی براساس&nbsp<i class="fa fa-fw fa-list-ol"></i></p>
+                            <div class="ord-links">
+                                <button href="#">ارزان‌ترین</button>
+                                <button href="#">گران‌ترین</button>
+                                <button href="#">پرفروش‌ترین</button>
+                                <button href="#" class="bg-primary text-light">جدید‌ترین</button>
+                                <button href="#">پربازدید‌ترین</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row products-row">
+            </div>
+            <div class="pagination">
+            </div>
+        </div>
+        <div class="d-none d-md-block col-md-3">
+            <div class="card side p-2 mt-3"
+                 style="background-image: url({% static 'base/img/free-ship.png' %});background-repeat: no-repeat">
+                <h6>ارسال رایگان سفارش</h6>
+                <p style="font-size: 15px;color:darkgrey">سفارش های بالای ۳۰۰هزار تومان</p>
+            </div>
+            <div class="card side mt-3">
+                <div class="card-header">
+                    <p class="card-text row flex-row-reverse" style="font-size: 18px; margin-right: 2px">جستجو در
+                        نتایج</p>
+                </div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input class="search-res" type="text" placeholder="جستجو">
+                        <div class="input-group-append search-btn">
+                            <a href="#"><i class="fa fa-fw fa-search"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row content-row">
-    </div>
-{% endblock %}
-
-{% block pagination %}
-    <div class="pagination">
     </div>
 {% endblock %}
 

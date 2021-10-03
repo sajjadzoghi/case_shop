@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 
 
 class CustomUserManager(BaseUserManager):
@@ -38,12 +38,29 @@ class CustomUserManager(BaseUserManager):
 
 
 # Create your models here.
+class Address(models.Model):
+    province = models.CharField(_('استان'), max_length=20)
+    city = models.CharField(_('شهر'), max_length=20)
+    exact_address = models.TextField(_('آدرس دقیق'), )
+    apartment_number = models.PositiveSmallIntegerField(_('پلاک'), )
+    unit = models.PositiveSmallIntegerField(_('واحد'), null=True)
+    zip_code = models.PositiveIntegerField(_('کدپستی'), null=True)
+
+    def __str__(self):
+        return self.exact_address
+
+    class Meta:
+        verbose_name_plural = 'آدرس‌ها'
+        verbose_name = 'آدرس'
+
+
 class Customer(AbstractUser):
     username = None
     mobile = models.CharField(_('شماره موبایل'), unique=True, max_length=11, )
     first_name = models.CharField(_('نام'), max_length=150)
     last_name = models.CharField(_('نام‌خانوادگی'), max_length=150)
     email = models.EmailField(_('ایمیل'), unique=True)
+    addresses = models.ManyToManyField(Address, related_name='customers', blank=True)
 
     USERNAME_FIELD = 'mobile'
     REQUIRED_FIELDS = ['first_name', 'last_name']
@@ -56,20 +73,3 @@ class Customer(AbstractUser):
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
-
-
-class Address(models.Model):
-    customer = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                 on_delete=models.CASCADE, related_name='addresses')
-    province = models.CharField(max_length=20)
-    city = models.CharField(max_length=20)
-    address = models.TextField()
-    apartment_number = models.PositiveSmallIntegerField()
-    zip_code = models.PositiveIntegerField()
-
-    def __str__(self):
-        return f'{self.customer.last_name} ,{self.city}'
-
-    class Meta:
-        verbose_name_plural = 'آدرس‌ها'
-        verbose_name = 'آدرس'

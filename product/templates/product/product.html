@@ -1,0 +1,107 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %}همه محصولات{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'product/css/product.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="row card-group" id="product-info">
+        <div class="col-7" id="product-details">
+            <div class="card">
+                <div class="card-body">
+                    <h4 id="name-fa">{{ product.name_fa }}</h4>
+                    <p>{{ product.name_en }}</p>
+                    <p>____________________________________________________________________________</p>
+                    <div class="row" style="direction: rtl;margin-right: 0">
+                        <i class="fa fa-fw fa-star" style="color: yellow;font-size: 15px;margin-top: 3px"></i>
+                        <p>{{ product.rate_average }}</p>
+                        <div style="height: 1.2rem;border: 0.001mm ridge grey;margin-right: 2rem;margin-left: 2rem;"></div>
+                        <p><a class="text-primary" href="#comments">{{ product.voters_number }}</a> دیدگاه کاربران</p>
+                        <div style="height: 1.2rem;border: 0.001mm ridge grey;margin-right: 2rem;margin-left: 2rem;"></div>
+                        <p>دسته‌بندی: <a class="text-primary" href="#">{{ product.category }}</a></p>
+                    </div>
+                    <div class="list-group">
+                        <form id="product-form">
+                            <div class="form-group d-none" id="product-id-group">
+                                <label for="product-id"></label>
+                                <input type="number" class="form-control" id="product-id" value="{{ product.id }}">
+                            </div>
+                            <div class="form-group d-none" id="image-group">
+                                <label for="image"></label>
+                                <input type="text" id="image" value="{{ product.images.all.0.image.url }}">
+                            </div>
+                            <div class="form-group d-none" id="price-group">
+                                <label for="price"></label>
+                                <input type="number" id="price" value="{{ product.final_price }}">
+                            </div>
+                            <div class="form-group d-none" id="inventory-group">
+                                <label for="inventory"></label>
+                                <input type="number" id="inventory" value="{{ product.inventory }}">
+                            </div>
+                            <div class="form-group" id="color-group">
+                                <label for="color">رنگ</label>
+                                <select id="color">
+                                    {% for color in product.colors.all %}
+                                        <option>{{ color.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group" id="guarantee-group">
+                                <label for="guarantee">گارانتی</label>
+                                <select id="guarantee">
+                                    {% for guarantee in product.guarantees.all %}
+                                        <option>{{ guarantee.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group" id="quantity-group">
+                                <label for="quantity">تعداد</label>
+                                <div class="value-button" id="decrease" onclick="decreaseValue()">-
+                                </div>
+                                <input type="number" id="quantity" value="1">
+                                <div class="value-button" id="increase" onclick="increaseValue()">+
+                                </div>
+                            </div>
+                            <p>موجودی: {{ product.inventory }}</p>
+                            <h5>
+                                <del>{{ product.price }} تومان</del>
+                            </h5>
+                            <h4>{{ product.final_price }} تومان</h4>
+                            <button class="btn btn-submit" id="add-product{{ product.id }}" type="submit">افزودن به سبد خرید</button>
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-5" id="product-images">
+            <div class="card pb-2" >
+                <div class="w3-content" style="max-width:1200px">
+                    {% for image in product.images.all %}
+                        <img alt="{{ image.name }}" class="mySlides" id="img-{{ forloop.counter }}"
+                             src="{{ image.image.url }}"
+                             style="display:none">
+                    {% endfor %}
+                    <div class="w3-row-padding w3-section" style="margin-top: 1rem">
+                        {% for image in product.images.all %}
+                            <div class="w3-col s3">
+                                <img alt="{{ image.name }}" class="demo w3-opacity w3-hover-opacity-off"
+                                     src="{{ image.image.url }}"
+                                     style="width:100%;cursor:pointer" onclick="currentDiv({{ forloop.counter }})">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'product/js/product.js' %}"></script>
+{% endblock %}

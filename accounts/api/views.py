@@ -31,6 +31,15 @@ class CustomerData:
         return {item: info[item] for item in info if item != 'otp'}
 
 
+# class GetCustomer():
+#     @staticmethod
+#     def value(data):
+#         try:
+#             return Customer.objects.get(Q(mobile=data) | Q(email=data))
+#         except Customer.DoesNotExist:
+#             return Response({'customer': ['کاربری با مشخصات داده‌شده پیدا نشد']}, status=status.HTTP_404_NOT_FOUND)
+
+
 class CustomerView(APIView):
 
     def get(self, request):
@@ -39,7 +48,6 @@ class CustomerView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        print(request.data)
         serializer = RegistrationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -93,43 +101,16 @@ class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer
     permission_classes = (IsAuthenticated,)
 
-    # def get_object(self, queryset=None):
-    #     obj = self.request.user
-    #     return obj
-    #
-    # def put(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     serializer = self.get_serializer(data=request.data)
-    #
-    #     serializer.is_valid(raise_exception=True)
-    #     # Check old password
-    #     if not self.object.check_password(serializer.validated_data["old_password"]):
-    #         return Response({"old_password": [".رمز عبور واردشده اشتباه است"]}, status=status.HTTP_400_BAD_REQUEST)
-    #     # set_password also hashes the password that the user will get
-    #     self.object.set_password(serializer.data.get("new_password"))
-    #     self.object.save()
-    #     return Response(status=status.HTTP_200_OK)
 
+class RequestResetPasswordMobile(APIView):
+    # An endpoint for requesting for resetting password by mobile number
 
-class GetCustomer():
-    @staticmethod
-    def value(data):
+    def post(self, request):
         try:
-            return Customer.objects.get(Q(mobile=data) | Q(email=data))
+            customer = Customer.objects.get(mobile=request.data['mobile'])
         except Customer.DoesNotExist:
             return Response({'customer': ['کاربری با مشخصات داده‌شده پیدا نشد']}, status=status.HTTP_404_NOT_FOUND)
 
-
-class RequestResetPasswordMobile(APIView):
-    # request reset password by Mobile number
-
-    def post(self, request):
-        customer = GetCustomer.value(request.data['mobile'])
-        # if request.data['mobile']:
-        # try:
-        #     customer = Customer.objects.get(mobile=request.data['mobile'])
-        # except Customer.DoesNotExist:
-        #     return Response({'customer': ['کاربری با مشخصات داده‌شده پیدا نشد']}, status=status.HTTP_404_NOT_FOUND)
         serializer = ResetPasswordByMobileSerializer(customer, data=request.data)
         serializer.is_valid(raise_exception=True)
         info = serializer.validated_data
@@ -143,25 +124,26 @@ class RequestResetPasswordMobile(APIView):
 
 
 class RequestResetPasswordEmail(APIView):
-    # request reset password by Email
+    # An endpoint for requesting for resetting password by Email
 
     def post(self, request):
-        customer = GetCustomer.value(request.data['email'])
-        # try:
-        #     customer = Customer.objects.get(email=request.data['email'])
-        # except Customer.DoesNotExist:
-        #     return Response({'customer': ['کاربری با مشخصات داده‌شده پیدا نشد']}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            customer = Customer.objects.get(email=request.data['email'])
+        except Customer.DoesNotExist:
+            return Response({'customer': ['کاربری با مشخصات داده‌شده پیدا نشد']}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = ResetPasswordByEmailSerializer(customer, data=request.data)
         serializer.is_valid(raise_exception=True)
         info = serializer.validated_data
         keygen = GenerateKey()
         key = base64.b32encode(keygen.value(info['email']).encode())  # Key is generated
         totp = pyotp.TOTP(key, interval=120)  # TOTP Model for OTP is created
+        print(totp.now())
 
         # using multi-threading send the OTP using Email services
         send_reset_password_mail(
             subject='درخواست بازیابی رمز عبور',
-            message=f'{totp.now()}{customer.first_name} عزیز، درخواست شما برای بازیابی رمز عبور دریافت شد. کد تایید شما جهت احراز هویت: ',
+            message=f' {customer.first_name} عزیز، درخواست شما برای بازیابی رمز عبور دریافت شد. کد تایید شما جهت احراز هویت: {totp.now()}',
             recipient_list=[info['email']]
         )  # using multi-threading send the OTP using Email services
         return Response({'email': info['email']}, status=status.HTTP_200_OK)

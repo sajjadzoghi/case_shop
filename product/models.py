@@ -2,15 +2,16 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import Avg, Count
-
-from shop.utils import product_image_path, product_media_path
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext as _
+from shop.utils import product_image_path
 
 
 # Create your models here.
 class Category(models.Model):
-    name = models.CharField(max_length=30, unique=True)
+    name = models.CharField(_('عنوان'), max_length=30, unique=True)
     parent_category = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE,
-                                        related_name='children')
+                                        related_name='children', verbose_name=_('دسته بندی پدر'))
 
     class Meta:
         verbose_name_plural = 'دسته‌بندی‌ها'
@@ -21,7 +22,7 @@ class Category(models.Model):
 
 
 class Color(models.Model):
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(_('نام رنگ'), max_length=200, unique=True)
 
     class Meta:
         verbose_name_plural = 'رنگ‌ها'
@@ -31,22 +32,43 @@ class Color(models.Model):
         return self.name
 
 
+# product additional media: video or additional images
+class ProductMedia(models.Model):
+    name = models.CharField(_('نام محصول موردنظر'), max_length=150)
+    image = models.ImageField(_('بارگزاری تصویر محصول'), upload_to=product_image_path)
+    date_created = models.DateTimeField(_('تاریخ بارگزاری تصویر'), auto_now_add=True)
+
+    class Meta:
+        ordering = ['date_created']
+        verbose_name_plural = 'عکس‌های محصولات'
+        verbose_name = 'عکس محصول'
+
+    def __str__(self):
+        return self.name
+
+    def image_tag(self):
+        return mark_safe('<img src="/media/%s" width="50" height="50" />' % (self.image))
+
+    image_tag.short_description = 'Image'
+
+
 class Product(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    name = models.CharField(max_length=200, unique=True)
-    # main image
-    image = models.ImageField(upload_to=product_image_path)
-    description = models.TextField()
-    colors = models.ManyToManyField(Color, blank=True, related_name='products')
-    inventory = models.IntegerField(default=0)
-    price = models.IntegerField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products',
+                                 verbose_name=_('دسته بندی'))
+    name_fa = models.CharField(_('نام فارسی'), max_length=200, unique=True)
+    name_en = models.CharField(_('نام انگلیسی'), max_length=200, unique=True)
+    images = models.ManyToManyField(ProductMedia, blank=True, related_name='products', verbose_name=_('تصاویر'))
+    description = models.TextField(_('توضیحات محصول'), )
+    colors = models.ManyToManyField(Color, blank=True, related_name='products', verbose_name=_('رنگ‌ها'))
+    inventory = models.IntegerField(_('موجودی'), default=0)
+    price = models.IntegerField(_('قیمت (به تومان)'), )
 
     class Meta:
         verbose_name_plural = 'محصولات'
         verbose_name = 'محصول'
 
     def __str__(self):
-        return self.name
+        return self.name_fa
 
     @property
     def final_price(self):
@@ -69,25 +91,12 @@ class Product(models.Model):
         return product[0].rates_avg
 
 
-# product additional media: video or additional images
-class ProductMedia(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to=product_media_path)
-    video = models.FileField(upload_to=product_media_path)
-
-    class Meta:
-        verbose_name_plural = 'مدیاهای محصولات'
-        verbose_name = 'مدیای محصول'
-
-    def __str__(self):
-        return self.product.name
-
-
 # Each product has its especial guarantees.
 class Guarantee(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='guarantees')
-    name = models.CharField(max_length=200, unique=True)
-    amount = models.IntegerField()
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='guarantees',
+                                verbose_name=_('محصول موردنظر'))
+    name = models.CharField(_('عنوان گارانتی'), max_length=200)
+    amount = models.IntegerField(_('قیمت (به تومان)'), )
 
     class Meta:
         verbose_name_plural = 'گارانتی مجصولات'
@@ -98,8 +107,8 @@ class Guarantee(models.Model):
 
 
 class ProductDiscount(models.Model):
-    products = models.ManyToManyField(Product, related_name='discounts')
-    amount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(100)])
+    products = models.ManyToManyField(Product, related_name='discounts', verbose_name=_('محصولات موردنظر'))
+    amount = models.PositiveSmallIntegerField(_('درصد تخفیف'), validators=[MaxValueValidator(100)])
 
     class Meta:
         verbose_name_plural = 'تخفیفات کلی محصولات'
@@ -123,9 +132,11 @@ class ProductRate(models.Model):
         (four, 4),
         (five, 5),
     )
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='rates')
-    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, related_name='rates')
-    rate_level = models.IntegerField(choices=rate_levels)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='rates',
+                                verbose_name=_('محصول موردنظر'))
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, related_name='rates',
+                                 verbose_name=_('امتیاز دهنده'))
+    rate_level = models.IntegerField(_('امتیاز'), choices=rate_levels)
 
     class Meta:
         verbose_name_plural = 'امتیازات محصولات'
@@ -136,9 +147,11 @@ class ProductRate(models.Model):
 
 
 class ProductComment(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
-    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, related_name='comments')
-    text = models.TextField()
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments',
+                                verbose_name=_('محصول موردنظر'))
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, related_name='comments',
+                                 verbose_name=_('نظر دهنده'))
+    text = models.TextField(_('متن نظر (یا دیدگاه)'), )
 
     class Meta:
         verbose_name_plural = 'نظرات محصولات'

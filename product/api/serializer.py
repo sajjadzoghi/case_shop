@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from product.models import Product, Category
+from product.models import Product, Category, ProductMedia
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -9,8 +9,15 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class MediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductMedia
+        fields = ['image']
+
+
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=False)
+    images = MediaSerializer(many=True)
     final_price = serializers.SerializerMethodField()
     voters_number = serializers.SerializerMethodField()
     rate_average = serializers.SerializerMethodField()
