@@ -30,6 +30,7 @@ $('#reset-password-mobile-form').submit(function (e) {
         success: function (resp) {
             $('#reset-password-mobile-modal').modal('hide');
             $('#reset-password-otp-form #otp-again').remove();
+            $('#reset-password-otp-form p').remove();
             $('#reset-password-otp-group label').html('لطفاً کد تأیید ۶رقمی ارسال شده به گوشی خود را وارد کنید');
             $('#reset-user').attr('value', resp.mobile);
             $('#auth-type').attr('value', 'mobile');
@@ -61,6 +62,7 @@ $('#reset-password-email-form').submit(function (e) {
         success: function (resp) {
             $('#reset-password-email-modal').modal('hide');
             $('#reset-password-otp-form #otp-again').remove();
+            $('#reset-password-otp-form p').remove();
             $('#reset-password-otp-group label').html('کد تأییدی ۶رقمی به ایمیل شما ارسال شد. لطفاً آن را در فیلد زیر وارد کنید')
             $('#reset-user').attr('value', resp.email);
             $('#auth-type').attr('value', 'email');

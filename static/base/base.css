@@ -2,7 +2,7 @@
     font-family: 'Weblogma_Yekan';
     src: url('fonts/Weblogma_Yekan.eot');
     src: url('fonts/Weblogma_Yekan.woff') format('woff');
-url('../fonts/Weblogma_Yekan.ttf') format('truetype');
+    url('../fonts/Weblogma_Yekan.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
 }
@@ -96,6 +96,10 @@ img {
     object-fit: contain;
 }
 
+img:focus {
+    border: none;
+}
+
 .button-logo {
     background-color: white;
     height: 0;
@@ -104,6 +108,10 @@ img {
     margin-right: 5rem;
     margin-left: 0.5rem;
     margin-bottom: 6.5rem;
+}
+
+.button-logo:focus {
+    outline: none;
 }
 
 .navbar {
@@ -153,6 +161,26 @@ i:hover {
     background-color: unset;
 }
 
+#cart-btn {
+    background-color: white;
+    border: none;
+    padding: unset;
+}
+
+#cart-btn:focus {
+    outline: none;
+}
+
+#cart-quantity {
+    text-align: center;
+    margin-right: 5px;
+    width: 22px;
+    height: 22px;
+    color: white;
+    border-radius: 50%;
+    background-color: #1e347b;
+}
+
 .container-fluid {
     padding-top: 9%;
     background-color: whitesmoke;
@@ -191,18 +219,23 @@ i:hover {
 }
 
 
-.content-row {
+.products-row {
     width: 64rem;
     margin-left: 1.5rem;
 }
 
-.content-row .card {
+.products-row .card {
     border-radius: 0;
     height: 28rem;
     padding: unset;
 }
 
-.content-row .card:hover {
+.products-row .card-body {
+    padding-right: 7px;
+    padding-left: 5px;
+}
+
+.products-row .card:hover {
     box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.2);
 }
 
@@ -267,6 +300,15 @@ i:hover {
     background-color: white;
 }
 
+#cart-modal .modal-content {
+    width: fit-content;
+    padding-left: 5px;
+}
+
+#cart-modal img {
+    width: 4rem
+}
+
 #register-form button, #login-form button, #otp-form button {
     border: none;
     height: 2.5rem;
@@ -278,6 +320,10 @@ i:hover {
 
 .btn-submit {
     background-color: #1e347b;
+    color: white;
+}
+
+.btn-submit:hover {
     color: white;
 }
 

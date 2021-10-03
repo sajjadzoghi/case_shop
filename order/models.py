@@ -1,11 +1,13 @@
 from django.conf import settings
 from django.db import models
+from django.core.validators import MaxValueValidator
+
+from accounts.models import Address
+from product.models import Product
+from django.utils.translation import ugettext as _
+
 
 # Create your models here.
-from coupon.models import Coupon
-from product.models import Product
-
-
 class Order(models.Model):
     # shipping types
     pishtaz = 'پیشتاز'
@@ -25,10 +27,13 @@ class Order(models.Model):
         (delivery, 'درحال ارسال توسط پیک'),
         (sent, 'تحویل سفارش به مشتری'),
     )
-    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, related_name='orders')
-    datetime = models.DateTimeField(auto_now_add=True)
-    shipping = models.CharField(choices=shipping_types, max_length=10, default=sefareshi)
-    status = models.CharField(choices=order_status, max_length=20)
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, related_name='orders',
+                                 verbose_name=_('کاربر'))
+    datetime = models.DateTimeField(_('تاریخ '), auto_now=True)
+    shipping = models.CharField(_('نوع پست'), choices=shipping_types, max_length=10, default=sefareshi)
+    status = models.CharField(_('وضعیت'), choices=order_status, max_length=20)
+    address = models.ForeignKey(Address, on_delete=models.RESTRICT, blank=True, null=True, related_name='orders',
+                                verbose_name=_('آدرس'))
 
     class Meta:
         verbose_name_plural = 'سفارش‌ها'
@@ -47,18 +52,15 @@ class Order(models.Model):
         if coupon:
             return int(self.total_without_coupon - (self.total_without_coupon * coupon.amount / 100))
 
-    def total_order_price(self):
-        self.items.total_item_price * len(self.items.all())
-
     @classmethod
     def get_active_order(cls, customer):
         return cls.objects.get_or_create(customer=customer, status=cls.active)
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.RESTRICT)
-    quantity = models.PositiveIntegerField()
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name=_('شماره سفارش'))
+    product = models.ForeignKey(Product, on_delete=models.RESTRICT, verbose_name=_('محصول'))
+    quantity = models.PositiveIntegerField(_('تعداد'), )
 
     class Meta:
         verbose_name_plural = 'محصولات هر سفارش'
@@ -72,19 +74,15 @@ class OrderItem(models.Model):
         return self.quantity * self.product.final_price
 
 
-class Payment(models.Model):
-    # payment status
-    successful = 'موفق'
-    failed = 'ناموفق'
-    payment_status = ((successful, 'موفق'), (failed, 'ناموفق'))
-
-    order = models.OneToOneField(Order, on_delete=models.RESTRICT, related_name='payment')
-    status = models.CharField(choices=payment_status, max_length=50)
-    datetime = models.DateTimeField(auto_now_add=True)
+class Coupon(models.Model):
+    customers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='coupons',
+                                       verbose_name=_('کاربران موردنظر'))
+    code = models.CharField(_('کد تخفیف'), max_length=15)
+    amount = models.PositiveSmallIntegerField(_('درصد تخفیف'), validators=[MaxValueValidator(100)])
 
     class Meta:
-        verbose_name_plural = 'پرداخت‌ها'
-        verbose_name = 'پرداخت'
+        verbose_name_plural = 'کدهای تخفیف'
+        verbose_name = 'کد تخفیف'
 
     def __str__(self):
-        return f'سفارش: {self.order}, وضعیت پرداخت: {self.status}'
+        return f'{self.code} - {self.amount}%'

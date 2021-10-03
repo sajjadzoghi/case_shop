@@ -2,7 +2,7 @@
 jQuery & AJAX for showing products list with pagination
 */
 
-let content = $('.content-row');
+let content = $('.products-row');
 let pagination = $('.pagination');
 
 $.ajax({
@@ -12,10 +12,10 @@ $.ajax({
     success: function (resp) {
         for (let product of resp.results) {
             $(content).append(`<div class="card col-3">
-                <img class="card-img-top" src="${product.image}" alt="Card image">
+                <img class="card-img-top" src="${product.images[0].image}" alt="Card image">
                 <div class="card-body">
-                    <p class="card-text">${product.name}</p>
-                    <div class="row" style="margin-left: 3px">
+                    <p class="card-text" style="direction: rtl">${product.name_fa}</p>
+                    <div class="row" style="margin-left: 2px">
                         <i class="fa fa-fw fa-star" style="color: yellow;font-size: 15px;margin-top: 7px"></i>
                         <h4>${product.rate_average}</h4>
                         <p style="margin-top: 4px">(${product.voters_number}دیدگاه)</p>
@@ -24,7 +24,7 @@ $.ajax({
                         <p style="margin-top: 3px">تومان</p>
                         <h3>&nbsp${product.final_price}</h3>
                     </div>
-                    <a href="#" class="stretched-link"></a>
+                    <a href="${product.id}" class="stretched-link"></a>
                 </div>
             </div>`)
         }
@@ -55,9 +55,9 @@ function page(url) {
                 $(content).empty();
                 for (let product of resp.results) {
                     $(content).append(`<div class="card col-3">
-                    <img class="card-img-top" src="${product.image}" alt="Card image">
+                    <img class="card-img-top" src="${product.images[0].image}" alt="Card image">
                     <div class="card-body">
-                        <p class="card-text">${product.name}</p>
+                        <p class="card-text" style="direction: rtl">${product.name_fa}</p>
                         <div class="row" style="margin-left: 3px">
                             <i class="fa fa-fw fa-star" style="color: yellow;font-size: 15px;margin-top: 7px"></i>
                             <h4>${product.rate_average}</h4>
@@ -67,7 +67,7 @@ function page(url) {
                             <p style="margin-top: 3px">تومان</p>
                             <h3>&nbsp${product.final_price}</h3>
                         </div>
-                        <a href="#" class="stretched-link"></a>
+                        <a href="${product.id}" class="stretched-link"></a>
                     </div>
                 </div>`)
                 }

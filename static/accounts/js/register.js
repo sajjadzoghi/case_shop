@@ -22,6 +22,7 @@ $('#register-form').submit(function (e) {
             $('#otp-form h5').remove();
             $('#otp-form #close').remove();
             $('#otp-form #otp-again').remove();
+            $('#otp-form p').remove();
             $('#otp-modal').modal('show');
             $('#register-form p').remove();
         },
@@ -64,6 +65,7 @@ $('#otp-form').submit(function (e) {
             $('#register-form').trigger('reset');
         },
         error: function (data) {
+            $('#otp-form #otp-again').remove();
             $('#otp-form p').remove();
             let errors = JSON.parse(data.responseText);
             for (let error_item in errors) {

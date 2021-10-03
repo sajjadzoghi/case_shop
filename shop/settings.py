@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'accounts',
     'product',
     'order',
-    'coupon',
     'core',
 ]
 
@@ -116,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fa-ir'
 
 TIME_ZONE = 'Asia/Tehran'
 
