@@ -20,14 +20,14 @@ $ cd kalashop
 
 To get this project up and running you should start by having Python installed on your computer. It's advised you create a virtual environment to store your projects dependencies separately.
 
-Create a virtualenv and activate it with these commands on mac/linux terminal:
+Create a virtualenv and activate it on Mac/Linux:
 
 ```
 $ python3 -m venv venv
 $ . venv/bin/activate
 ```
 
-Or these commands on Windows cmd:
+Or on Windows cmd:
 
 ```
 $ py -3 -m venv venv
