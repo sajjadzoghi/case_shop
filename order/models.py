@@ -29,9 +29,9 @@ class Order(models.Model):
     )
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, related_name='orders',
                                  verbose_name=_('کاربر'))
-    datetime = models.DateTimeField(_('تاریخ '), auto_now=True)
-    shipping = models.CharField(_('نوع پست'), choices=shipping_types, max_length=10, default=sefareshi)
-    status = models.CharField(_('وضعیت'), choices=order_status, max_length=20)
+    datetime = models.DateTimeField(_('تاریخ '), auto_now_add=True)
+    shipping = models.CharField(_('نوع پست'), choices=shipping_types, max_length=10)
+    status = models.CharField(_('وضعیت'), choices=order_status, max_length=20, default=bargiri)
     address = models.ForeignKey(Address, on_delete=models.RESTRICT, blank=True, null=True, related_name='orders',
                                 verbose_name=_('آدرس'))
 

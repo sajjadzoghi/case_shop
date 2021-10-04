@@ -75,12 +75,15 @@ $(`#product-form`).submit(function (e) {
         'price': price,
         'guarantee': guarantee,
     };
+    $('#is-empty').remove();
+    $('#cart-btn-group').show();
+    $('#empty-button').hide();
+
     if (sessionStorage.cart_quantity) {
         sessionStorage.cart_quantity = Number(sessionStorage.cart_quantity) + 1;
     } else {
         sessionStorage.cart_quantity = 1;
     }
-    $('#cart-btn').prop('disabled', '');
     $('#cart-quantity').html(sessionStorage.cart_quantity);
 
 
@@ -94,21 +97,31 @@ $(`#product-form`).submit(function (e) {
         sessionStorage.items = JSON.stringify(items);
     }
 
+    if (sessionStorage.total_price) {
+        sessionStorage.total_price = Number(sessionStorage.total_price) + (Number(price) * Number(quantity));
+        $('#cart-total-price').html(`جمع کل: ${sessionStorage.total_price} تومان`);
+    } else {
+        sessionStorage.total_price = Number(price) * Number(quantity);
+        $('#cart-total-price').html(`جمع کل: ${sessionStorage.total_price} تومان`);
+    }
+
     $('#cart-modal .modal-body').prepend(`<div id="item${product_id}">
-                        <div class="row" style="direction: rtl;margin-right: 1px">
-                            <img alt="item" src="${image}">
-                            <h5 class="text-dark" style="margin-top: 2rem;margin-right: 3px">${name}</h5>
-                            <i onclick="remove_item(${product_id})" class="fa fa-fw fa-trash"
-                               style="font-size: 32px;margin-right: auto;margin-left: 5px;margin-top: 1.6rem;cursor: pointer"></i>
-                        </div>
-                        <div class="row" style="direction: rtl;margin-right: 1px">
-                            <p class="text-dark">${quantity} عدد</p>
-                            <div style="height: 1.2rem;border: 0.001mm ridge grey;margin-right: 2rem;margin-left: 2rem;"></div>
-                            <p class="text-dark">رنگ ${color}</p>
-                        </div>
-                        <h5 class="text-dark" style="direction: rtl">${price} میلیون تومان</h5>
-                        <p>_____________________________________</p>
-                    </div>`);
+            <div class="row" style="direction: rtl;margin-right: 1px">
+                <img alt="item" src="${image}">
+                <h5 class="text-dark" style="margin-top: 2rem;margin-right: 3px">${name}</h5>
+                <i onclick="remove_item('${product_id}')" class="fa fa-fw fa-trash"
+                   style="font-size: 32px;margin-right: auto;margin-left: 5px;margin-top: 1.6rem;cursor: pointer"></i>
+            </div>
+            <div class="row" style="direction: rtl;margin-right: 1px">
+                <p class="text-dark">${quantity} عدد</p>
+                <div style="height: 1.2rem;border: 0.001mm ridge grey;margin-right: 2rem;margin-left: 2rem;"></div>
+                <p class="text-dark">رنگ ${color}</p>
+                <div style="height: 1.2rem;border: 0.001mm ridge grey;margin-right: 2rem;margin-left: 2rem;"></div>
+                <p class="text-dark">قیمت واحد: ${price} تومان</p>
+            </div>
+            <h5 class="text-dark" style="direction: rtl">قیمت نهایی: ${Number(price) * Number(quantity)} تومان</h5>
+            <p>_____________________________________________</p>
+        </div>`);
 
     $(`#add-product${product_id}`).prop('disabled', 'true').addClass('active');
 

@@ -1,6 +1,8 @@
-/*
-jQuery & AJAX for showing products list with pagination
-*/
+// jQuery & AJAX for showing products list with pagination
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 let content = $('.products-row');
 let pagination = $('.pagination');
@@ -15,18 +17,29 @@ $.ajax({
                 <img class="card-img-top" src="${product.images[0].image}" alt="Card image">
                 <div class="card-body">
                     <p class="card-text" style="direction: rtl">${product.name_fa}</p>
-                    <div class="row" style="margin-left: 2px">
+                    <div class="row" style="margin-left: 2px;height: 3rem">
                         <i class="fa fa-fw fa-star" style="color: yellow;font-size: 15px;margin-top: 7px"></i>
                         <h4>${product.rate_average}</h4>
                         <p style="margin-top: 4px">(${product.voters_number}دیدگاه)</p>
                     </div>
+                    <div class="row" style="margin-left: 1rem;height: 1.5rem">
+                        <h5><del id="price${product.id}">&nbsp${product.price}</del></h5>
+                    </div>
                     <div class="row" style="margin-left: 3px">
                         <p style="margin-top: 3px">تومان</p>
-                        <h3>&nbsp${product.final_price}</h3>
+                        <h3 id="final-price${product.id}">&nbsp${product.final_price}</h3>
                     </div>
                     <a href="${product.id}" class="stretched-link"></a>
                 </div>
-            </div>`)
+            </div>`);
+
+            let price = $(`#price${product.id}`).html();
+            $(`#price${product.id}`).html(numberWithCommas(price));
+            let final_price = $(`#final-price${product.id}`).html();
+            $(`#final-price${product.id}`).html(numberWithCommas(final_price));
+            if (price === final_price) {
+                $(`#price${product.id}`).html('<br>');
+            }
         }
 
         $(pagination).append(`<button id="previous" class="page" onclick="page('${resp.previous}')">&laquo;</button>`)
@@ -55,21 +68,32 @@ function page(url) {
                 $(content).empty();
                 for (let product of resp.results) {
                     $(content).append(`<div class="card col-3">
-                    <img class="card-img-top" src="${product.images[0].image}" alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text" style="direction: rtl">${product.name_fa}</p>
-                        <div class="row" style="margin-left: 3px">
-                            <i class="fa fa-fw fa-star" style="color: yellow;font-size: 15px;margin-top: 7px"></i>
-                            <h4>${product.rate_average}</h4>
-                            <p style="margin-top: 4px">(${product.voters_number}دیدگاه)</p>
+                        <img class="card-img-top" src="${product.images[0].image}" alt="Card image">
+                        <div class="card-body">
+                            <p class="card-text" style="direction: rtl">${product.name_fa}</p>
+                            <div class="row" style="margin-left: 2px;height: 3rem">
+                                <i class="fa fa-fw fa-star" style="color: yellow;font-size: 15px;margin-top: 7px"></i>
+                                <h4>${product.rate_average}</h4>
+                                <p style="margin-top: 4px">(${product.voters_number}دیدگاه)</p>
+                            </div>
+                            <div class="row" style="margin-left: 1rem;height: 1.5rem">
+                                <h5><del id="price${product.id}">&nbsp${product.price}</del></h5>
+                            </div>
+                            <div class="row" style="margin-left: 3px">
+                                <p style="margin-top: 3px">تومان</p>
+                                <h3 id="price${product.id}">&nbsp${product.final_price}</h3>
+                            </div>
+                            <a href="${product.id}" class="stretched-link"></a>
                         </div>
-                        <div class="row" style="margin-left: 3px">
-                            <p style="margin-top: 3px">تومان</p>
-                            <h3>&nbsp${product.final_price}</h3>
-                        </div>
-                        <a href="${product.id}" class="stretched-link"></a>
-                    </div>
-                </div>`)
+                    </div>`);
+
+                    let price = $(`#price${product.id}`).html();
+                    $(`#price${product.id}`).html(numberWithCommas(price));
+                    let final_price = $(`#final-price${product.id}`).html();
+                    $(`#final-price${product.id}`).html(numberWithCommas(final_price));
+                    if (price === final_price) {
+                        $(`#price${product.id}`).html('<br>');
+                    }
                 }
 
                 $(pagination).empty();
