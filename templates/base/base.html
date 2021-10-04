@@ -169,11 +169,11 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div>
-                        <h5 class="text-dark">جمع کل: 30000000 میلیون تومان</h5>
+                        <h4 id="cart-total-price" class="text-dark"></h4>
                     </div>
                     <div class="btn-group mt-3" id="cart-btn-group">
-                        <button type="button" class="btn btn-danger mr-3" data-dismiss="modal">بستن</button>
-                        <button type="submit" class="btn btn-submit mr-3" data-dismiss="modal">
+                        <button class="btn btn-danger mr-3" data-dismiss="modal">بستن</button>
+                        <button class="btn btn-submit mr-3" data-dismiss="modal"><a href="{% url 'order:order' %}"></a>
                             ثبت سفارش
                         </button>
                     </div>
@@ -187,32 +187,46 @@
 <script>
     if (sessionStorage.cart_quantity) {
         $('#cart-quantity').html(sessionStorage.cart_quantity);
-        if (sessionStorage.cart_quantity === '0') {
-            $('#cart-btn').prop('disabled', 'true');
-        }
     } else {
         $('#cart-quantity').html(0);
-        $('#cart-btn').prop('disabled', 'true');
+    }
+
+    if (sessionStorage.total_price) {
+        if (sessionStorage.total_price !== '0') {
+            $('#cart-total-price').html(`جمع کل: ${Number(sessionStorage.total_price)} تومان`);
+        } else {
+            $('#cart-total-price').hide();
+            $('#cart-btn-group').hide();
+            $('#cart-modal .modal-body').prepend(`<h4 id="is-empty">!سبد خرید شما خالی است</h4>`);
+            $('#cart-modal .modal-body').append(`<button type="button" id="empty-button" class="btn btn-danger" data-dismiss="modal">بستن</button>`);
+        }
+    } else {
+        $('#cart-total-price').hide();
+        $('#cart-btn-group').hide();
+        $('#cart-modal .modal-body').prepend(`<h4 id="is-empty">!سبد خرید شما خالی است</h4>`);
+        $('#cart-modal .modal-body').append(`<button type="button" id="empty-button" class="btn btn-danger" data-dismiss="modal">بستن</button>`);
     }
 
     if (sessionStorage.items) {
         let items = JSON.parse(sessionStorage.items);
         for (let item of items) {
             $('#cart-modal .modal-body').prepend(`<div id="item${item.id}">
-                        <div class="row" style="direction: rtl;margin-right: 1px">
-                            <img alt="item" src="${item.image}">
-                            <h5 class="text-dark" style="margin-top: 2rem;margin-right: 3px">${item.name}</h5>
-                            <i onclick="remove_item(${item.id})" class="fa fa-fw fa-trash"
-                               style="font-size: 32px;margin-right: auto;margin-left: 5px;margin-top: 1.6rem;cursor: pointer"></i>
-                        </div>
-                        <div class="row" style="direction: rtl;margin-right: 1px">
-                            <p class="text-dark">${item.quantity} عدد</p>
-                            <div style="height: 1.2rem;border: 0.001mm ridge grey;margin-right: 2rem;margin-left: 2rem;"></div>
-                            <p class="text-dark">رنگ ${item.color}</p>
-                        </div>
-                        <h5 class="text-dark" style="direction: rtl">${item.price} میلیون تومان</h5>
-                        <p>_____________________________________</p>
-                    </div>`);
+                    <div class="row" style="direction: rtl;margin-right: 1px">
+                        <img alt="item" src="${item.image}">
+                        <h5 class="text-dark" style="margin-top: 2rem;margin-right: 3px">${item.name}</h5>
+                        <i onclick="remove_item('${item.id}')" class="fa fa-fw fa-trash"
+                           style="font-size: 32px;margin-right: auto;margin-left: 5px;margin-top: 1.6rem;cursor: pointer"></i>
+                    </div>
+                    <div class="row" style="direction: rtl;margin-right: 1px">
+                        <p class="text-dark">${item.quantity} عدد</p>
+                        <div style="height: 1.2rem;border: 0.001mm ridge grey;margin-right: 2rem;margin-left: 2rem;"></div>
+                        <p class="text-dark">رنگ ${item.color}</p>
+                        <div style="height: 1.2rem;border: 0.001mm ridge grey;margin-right: 2rem;margin-left: 2rem;"></div>
+                        <p class="text-dark">قیمت واحد: ${item.price} تومان</p>
+                    </div>
+                    <h5 class="text-dark" style="direction: rtl">قیمت نهایی: ${Number(item.price) * Number(item.quantity)} تومان</h5>
+                    <p>_____________________________________________</p>
+                </div>`);
         }
     }
 
@@ -220,21 +234,32 @@
         sessionStorage.cart_quantity = Number(sessionStorage.cart_quantity) - 1;
         $('#cart-quantity').html(sessionStorage.cart_quantity);
         if (sessionStorage.cart_quantity === '0') {
-            $('#cart-btn').prop('disabled', 'true');
+            $('#cart-total-price').hide();
+            $('#cart-btn-group').hide();
+            $('#cart-modal .modal-body').prepend(`<h4 id="is-empty">!سبد خرید شما خالی است</h4>`);
+            $('#cart-modal .modal-body').append(`<button type="button" id="empty-button" class="btn btn-danger" data-dismiss="modal">بستن</button>`);
         }
 
         let items = JSON.parse(sessionStorage.items);
+        let new_items = [];
+        let new_total = 0;
         for (let item of items) {
-            if (item.id === id) {
-                var index = items.indexOf(item);
-                if (index !== -1) {
-                    items.splice(index, 1);
+            if (item.id !== id) {
+                new_items.push(item);
+                new_total += (Number(item.price) * Number(item.quantity));
                 }
             }
-        }
+        items = new_items;
+        sessionStorage.items = JSON.stringify(items);
+        sessionStorage.total_price = new_total;
+        $('#cart-total-price').html(`جمع کل: ${sessionStorage.total_price} تومان`);
+
+
         $(`#cart-modal #item${id}`).remove();
         $(`#add-product${id}`).prop('disabled', '').removeClass('active');
     }
+
+
 
 </script>
 {% block script %}

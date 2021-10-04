@@ -11,19 +11,19 @@ admin.site.register(ProductComment)
 class ProductInline(admin.StackedInline):
     model = Product
     extra = 1
-    max_num = 10
+    max_num = 30
 
 
 class GuaranteeInline(admin.TabularInline):
     model = Guarantee
     extra = 2
-    max_num = 50
+    max_num = 10
 
 
 class ProductDiscountInline(admin.StackedInline):
     model = ProductDiscount.products.through
     extra = 1
-    max_num = 10
+    max_num = 1
 
 
 @admin.register(Category)
