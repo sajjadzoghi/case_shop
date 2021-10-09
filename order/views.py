@@ -1,25 +1,57 @@
-from django.shortcuts import render
-from django.views.generic import DetailView, ListView, CreateView, DeleteView
-from order.models import Order
+from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import DetailView, ListView, CreateView, TemplateView
+
+from accounts.forms import AddressForm
+from accounts.models import Address
+from order.forms import OrderForm, OrderItemForm
+from order.models import Order, OrderItem
 
 
 # Create your views here.
-class CreateOrder(CreateView):
+class AddOrderAddress(LoginRequiredMixin, CreateView):
+    model = Address
+    form_class = AddressForm
+    template_name = 'order/add-address.html'
+    success_url = '/orders/create-order/'
+
+    def form_valid(self, form):
+        form.instance.customer = self.request.user
+        return super().form_valid(form)
+
+
+class CreateOrder(LoginRequiredMixin, CreateView):
     model = Order
-    template_name = 'order/create_cart.html'
+    form_class = OrderForm
+    template_name = 'order/create-order.html'
+    success_url = '/orders/add-item/'
+
+    def form_valid(self, form):
+        form.instance.customer = self.request.user
+        super().form_valid(form)
+        return render(self.request, 'order/add-item.html', context={'order_id': self.object.id})
+
+
+class AddOrderItem(LoginRequiredMixin, CreateView):
+    model = OrderItem
+    form_class = OrderItemForm
+    template_name = 'order/add-item.html'
+    success_url = '/orders/order-result/'
+
+
+class OrderResult(TemplateView):
+    template_name = 'order/order-result.html'
 
 
 class DetailOrder(DetailView):
     model = Order
-    template_name = 'order/detail_cart.html'
+    template_name = 'order/order-detail.html'
 
 
 class ListOrder(ListView):
     model = Order
     context_object_name = 'carts'
-    template_name = 'order/list_carts.html'
-
-
-class DeleteOrder(DeleteView):
-    model = Order
-    template_name = 'order/delete_cart.html'
+    template_name = 'order/all_orders.html'

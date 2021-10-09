@@ -12,5 +12,5 @@ urlpatterns = [
     path('password-reset/by-mobile/', RequestResetPasswordMobile.as_view(), name='reset_password_mobile'),
     path('password-reset/verify-otp/', VerifyOTPResetPassword.as_view(), name='verify_otp_reset_password'),
     path('password-reset/confirm/', ConfirmResetPassword.as_view(), name='confirm_reset_password'),
-    path('', CustomerView.as_view(), name='customer'),
+    # path('', CustomerView.as_view(), name='customer'),
 ]

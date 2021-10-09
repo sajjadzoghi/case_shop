@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}همه محصولات{% endblock %}
+{% block title %}{{ product.name_fa }}{% endblock %}
 
 {% block style %}
     <link rel="stylesheet" href="{% static 'product/css/product.css' %}">
@@ -28,7 +28,7 @@
                         <form id="product-form">
                             <div class="form-group d-none" id="product-id-group">
                                 <label for="product-id"></label>
-                                <input type="number" class="form-control" id="product-id" value="{{ product.id }}">
+                                <input type="number" id="product-id" value="{{ product.id }}">
                             </div>
                             <div class="form-group d-none" id="image-group">
                                 <label for="image"></label>
@@ -42,31 +42,31 @@
                                 <label for="inventory"></label>
                                 <input type="number" id="inventory" value="{{ product.inventory }}">
                             </div>
-                            <div class="form-group" id="color-group">
-                                <label for="color">رنگ</label>
-                                <select id="color">
+                            <div class="form-group row" id="color-group">
+                                <label class="col-0" for="color">رنگ:&nbsp;</label>
+                                <select class="form-control col-4" id="color" >
                                     {% for color in product.colors.all %}
                                         <option>{{ color.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="form-group" id="guarantee-group">
-                                <label for="guarantee">گارانتی</label>
-                                <select id="guarantee">
+                            <div class="form-group row" id="guarantee-group">
+                                <label class="col-0" for="guarantee">گارانتی:&nbsp;</label>
+                                <select class="form-control col-4" id="guarantee">
                                     {% for guarantee in product.guarantees.all %}
                                         <option>{{ guarantee.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="form-group" id="quantity-group">
-                                <label for="quantity">تعداد</label>
-                                <div class="value-button" id="decrease" onclick="decreaseValue()">-
+                            <div class="form-group row" id="quantity-group">
+                                <label class="col-0" for="quantity">تعداد:&nbsp;</label>
+                                <div class="btn btn-info" id="decrease" onclick="decreaseValue()">-
                                 </div>
-                                <input type="number" id="quantity" value="1">
-                                <div class="value-button" id="increase" onclick="increaseValue()">+
+                                <input type="number" class="col-0 form-control" id="quantity" value="1" min="1" max="{{ product.inventory }}">
+                                <div class="btn btn-info" id="increase" onclick="increaseValue()">+
                                 </div>
                             </div>
-                            <p>موجودی: {{ product.inventory }}</p>
+                            <p style="font-size: large;color: rgba(0,0,0,0.76)">موجودی کالا: {{ product.inventory }} عدد</p>
                             <h5>
                                 <del>{{ product.price }} تومان</del>
                             </h5>

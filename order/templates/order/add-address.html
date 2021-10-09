@@ -1,0 +1,152 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %}ثبت آدرس جدید{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'accounts/css/add-address.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="row add-address-row">
+        <div class="card col-5">
+            <h5 class="alert alert-info m-2 mt-4">« آدرس خود را بادقت وارد کنید »</h5>
+            <form method="post" id="add-address-form">
+                {% csrf_token %}
+                {% for error in form.non_field_errors %}
+                    <p class="text-danger">{{ error }}*</p>
+                {% endfor %}
+                {% for error in form.province.errors %}
+                    <p class="text-danger">{{ error }}*</p>
+                {% endfor %}
+                {% for error in form.city.errors %}
+                    <p class="text-danger">{{ error }}*</p>
+                {% endfor %}
+                {% for error in form.exact_address.errors %}
+                    <p class="text-danger">{{ error }}*</p>
+                {% endfor %}
+                {% for error in form.apartment_number.errors %}
+                    <p class="text-danger">{{ error }}*</p>
+                {% endfor %}
+                {% for error in form.unit.errors %}
+                    <p class="text-danger">{{ error }}*</p>
+                {% endfor %}
+                {% for error in form.zip_code.errors %}
+                    <p class="text-danger">{{ error }}*</p>
+                {% endfor %}
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="province">استان:</label>
+                        <select class="form-control" name="province" id="province" onchange="Func(this.value)">
+                            <option value=""></option>
+                            <option value="  ,آذرشهر ,اسکو ,اهر ,بستان‌آباد ,بناب ,تبریز ,جلفا ,چاراویماق ,سراب ,شبستر ,عجب‌شیر ,کلیبر ,مراغه ,مرند ,ملکان ,میانه ,ورزقان ,هریس ,هشترود">
+                                آذربایجان شرقی
+                            </option>
+                            <option value="  ,ارومیه ,اشنویه ,بوکان ,پیرانشهر ,تکاب ,چالدران ,خوی ,سردشت ,سلماس ,شاهین‌دژ ,ماکو ,مهاباد ,میاندوآب ,نقده">
+                                آذربایجان غربی
+                            </option>
+                            <option value="  ,اردبیل ,بیله‌سوار ,پارس‌آباد ,خلخال ,کوثر ,گِرمی ,مِشگین‌شهر ,نَمین ,نیر">
+                                اردبیل
+                            </option>
+                            <option value="  ,آران و بیدگل ,اردستان ,اصفهان ,برخوار و میمه ,تیران و کرون ,چادگان ,خمینی‌شهر ,خوانسار ,سمیرم ,شهرضا ,سمیرم سفلی ,فریدن ,فریدون‌شهر ,فلاورجان ,کاشان ,گلپایگان ,لنجان ,مبارکه ,نائین ,نجف‌آباد ,نطنز">
+                                اصفهان
+                            </option>
+                            <option value="  ,آبدانان ,ایلام ,ایوان ,دره‌شهر ,دهلران ,شیروان و چرداول ,مهران">ایلام
+                            </option>
+                            <option value="  ,بوشهر ,تنگستان ,جم ,دشتستان ,دشتی,دیر ,دیلم ,کنگان ,گناوه">بوشهر</option>
+                            <option value="  ,اسلام‌شهر ,پاکدشت ,تهران ,دماوند ,رباط‌کریم ,ری ,ساوجبلاغ ,شمیرانات ,شهریار ,فیروزکوه ,کرج ,نظرآباد ,ورامین">
+                                تهران
+                            </option>
+                            <option value="  ,اردل ,بروجن ,شهرکرد ,فارسان ,کوهرنگ ,لردگان">چهارمحال و بختیاری</option>
+                            <option value="  ,بیرجند ,درمیان ,سرایان ,سربیشه ,فردوس ,قائنات,نهبندان">خراسان جنوبی
+                            </option>
+                            <option value="  ,بردسکن ,تایباد ,تربت جام ,تربت حیدریه ,چناران ,خلیل‌آباد ,خواف ,درگز ,رشتخوار ,سبزوار ,سرخس ,فریمان ,قوچان ,کاشمر ,کلات ,گناباد ,مشهد ,مه ولات ,نیشابور">
+                                خراسان رضوی
+                            </option>
+                            <option value="  ,اسفراین ,بجنورد ,جاجرم ,شیروان ,فاروج ,مانه و سملقان">خراسان شمالی
+                            </option>
+                            <option value="  ,آبادان ,امیدیه ,اندیمشک ,اهواز ,ایذه ,باغ‌ملک ,بندر ماهشهر ,بهبهان ,خرمشهر ,دزفول ,دشت آزادگان ,رامشیر ,رامهرمز ,شادگان ,شوش ,شوشتر ,گتوند ,لالی ,مسجد سلیمان,هندیجان ">
+                                خوزستان
+                            </option>
+                            <option value="  ,ابهر ,ایجرود ,خدابنده ,خرمدره ,زنجان ,طارم ,ماه‌نشان">زنجان</option>
+                            <option value="  ,دامغان ,سمنان ,شاهرود ,گرمسار ,مهدی‌شهر">سمنان</option>
+                            <option value="  ,ایرانشهر ,چابهار ,خاش ,دلگان ,زابل ,زاهدان ,زهک ,سراوان ,سرباز ,کنارک ,نیک‌شهر">
+                                سیستان و
+                                بلوچستان
+                            </option>
+                            <option value="  ,آباده ,ارسنجان ,استهبان ,اقلید ,بوانات ,پاسارگاد ,جهرم ,خرم‌بید ,خنج ,داراب ,زرین‌دشت ,سپیدان ,شیراز ,فراشبند ,فسا ,فیروزآباد ,قیر و کارزین ,کازرون ,لارستان ,لامِرد ,مرودشت ,ممسنی ,مهر ,نی‌ریز">
+                                فارس
+                            </option>
+                            <option value="  ,آبیک ,البرز ,بوئین‌زهرا ,تاکستان ,قزوین">قزوین</option>
+                            <option value="  ,قم">قم</option>
+                            <option value="  ,بانه ,بیجار ,دیواندره ,سروآباد ,سقز ,سنندج ,قروه ,کامیاران ,مریوان">
+                                کردستان
+                            </option>
+                            <option value="  ,بافت ,بردسیر ,بم ,جیرفت ,راور ,رفسنجان ,رودبار جنوب ,زرند ,سیرجان ,شهر بابک ,عنبرآباد ,قلعه گنج ,کرمان ,کوهبنان ,کهنوج ,منوجان">
+                                کرمان
+                            </option>
+                            <option value="  ,اسلام‌آباد غرب ,پاوه ,ثلاث باباجانی ,جوانرود ,دالاهو ,روانسر ,سرپل ذهاب ,سنقر ,صحنه ,قصر شیرین ,کرمانشاه ,کنگاور ,گیلان غرب ,هرسین">
+                                کرمانشاه
+                            </option>
+                            <option value="  ,بویراحمد ,بهمئی ,دنا ,کهگیلویه ,گچساران">کهگیلویه و بویراحمد</option>
+                            <option value="  ,آزادشهر ,آق‌قلا ,بندر گز ,ترکمن ,رامیان ,علی‌آباد ,کردکوی ,کلاله ,گرگان ,گنبد کاووس ,مراوه‌تپه ,مینودشت">
+                                گلستان
+                            </option>
+                            <option value="  ,آستارا ,آستانه اشرفیه ,اَملَش ,بندر انزلی ,رشت ,رضوانشهر ,رودبار ,رودسر ,سیاهکل ,شَفت ,صومعه‌سرا ,طوالش ,فومَن ,لاهیجان ,لنگرود ,ماسال">
+                                گیلان
+                            </option>
+                            <option value="  ,ازنا ,الیگودرز ,بروجرد ,پل‌دختر ,خرم‌آباد ,دورود ,دلفان ,سلسله ,کوهدشت">
+                                لرستان
+                            </option>
+                            <option value="  ,آمل ,بابل ,بابلسر ,بهشهر ,تنکابن ,جویبار ,چالوس ,رامسر ,ساری ,سوادکوه ,قائم‌شهر ,گلوگاه ,محمودآباد ,نکا ,نور ,نوشهر">
+                                مازندران
+                            </option>
+                            <option value="  ,آشتیان ,اراک ,تفرش ,خمین ,دلیجان ,زرندیه ,ساوه ,شازند ,کمیجان ,محلات">
+                                مرکزی
+                            </option>
+                            <option value="  ,ابوموسی ,بستک ,بندر عباس ,بندر لنگه ,جاسک ,حاجی‌آباد ,شهرستان خمیر ,رودان  ,قشم ,گاوبندی ,میناب">
+                                هرمزگان
+                            </option>
+                            <option value="  ,اسدآباد ,بهار ,تویسرکان ,رزن ,کبودرآهنگ ,ملایر ,نهاوند ,همدان">همدان
+                            </option>
+                            <option value="  ,ابرکوه ,اردکان ,بافق ,تفت ,خاتم ,صدوق ,طبس ,مهریز ,مِیبُد ,یزد">یزد
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="city">شهر:</label>
+                        <select class="form-control" name="city" id="city"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exact_address">آدرس دقیق:</label>
+                    <input type="text" class="form-control" name="exact_address" id="exact_address">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="No">پلاک:</label>
+                        <input type="number" class="form-control" name="apartment_number" id="No">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="unit">واحد:</label>
+                        <input type="number" class="form-control" name="unit" id="unit">
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="zip_code">کد پستی:</label>
+                        <input type="number" class="form-control" name="zip_code" id="zip_code">
+                    </div>
+                </div>
+                <div id="add-address-btn-group" class="mt-3">
+                    <button type="submit" class="btn btn-submit">ثبت آدرس
+                    </button>
+                    <button class="btn btn-danger mr-3"><a class="text-white" href="{% url 'product:all_products' %}">انصراف</a></button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'order/js/add-address.js' %}"></script>
+{% endblock %}

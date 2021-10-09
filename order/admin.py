@@ -1,9 +1,8 @@
 from django.contrib import admin
 from order.models import Order, OrderItem, Coupon
 
-# Register your models here.
-admin.site.register(OrderItem)
 
+# Register your models here.
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -16,6 +15,12 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'status', 'customer', 'shipping', ]
     search_fields = ['id', 'status', 'customer', 'shipping', ]
     inlines = [OrderItemInline, ]
+
+
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ['order', 'product', 'quantity', ]
+    search_fields = ['order', ]
 
 
 @admin.register(Coupon)

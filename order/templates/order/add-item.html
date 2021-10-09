@@ -1,0 +1,30 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %}ثبت سفارش{% endblock %}
+
+
+{% block content %}
+    <p id="order-id">{{ order_id }}</p>
+    <form method="POST" action="{% url 'order:add_item' %}" class="d-none" id="add-item-form">
+        {% csrf_token %}
+        <div class="form-group" id="product-group">
+            <label for="{{ form.product.id_for_label }}"></label>
+            <input type="text" class="form-control" name="product" id="product">
+        </div>
+        <div class="form-group" id="order-group">
+            <label for="{{ form.order.id_for_label }}"></label>
+            <input type="text" class="form-control" name="order" id="order">
+        </div>
+        <div class="form-group" id="quantity-group">
+            <label for="{{ form.quantity.id_for_label }}"></label>
+            <input type="text" class="form-control" name="quantity" id="quantity">
+        </div>
+        <button type="submit">sub</button>
+    </form>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'order/js/add-item.js' %}"></script>
+{% endblock %}

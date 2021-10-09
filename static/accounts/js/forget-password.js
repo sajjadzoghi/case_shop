@@ -2,8 +2,10 @@ let forget_btn = $('#forget-btn');
 
 function forget_password() {
     $('.reset-choices').remove()
-    $(forget_btn).after(`<button class="reset-choices" onclick="reset_by_mobile()">بازیابی از طریق شماره موبایل</button>`);
-    $(forget_btn).after(`<button class="reset-choices" onclick="reset_by_email()">بازیابی از طریق ایمیل</button>`);
+    $(forget_btn).after(`<div class="reset-choices mt-3 text-center">
+                    <button class="reset-choices btn btn-info" onclick="reset_by_mobile()">بازیابی از طریق شماره موبایل</button>
+                    <button class="reset-choices btn btn-info" onclick="reset_by_email()">بازیابی از طریق ایمیل</button>
+                </div>`);
 }
 
 function reset_by_mobile() {

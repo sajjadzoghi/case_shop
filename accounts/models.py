@@ -38,21 +38,6 @@ class CustomUserManager(BaseUserManager):
 
 
 # Create your models here.
-class Address(models.Model):
-    province = models.CharField(_('استان'), max_length=20)
-    city = models.CharField(_('شهر'), max_length=20)
-    exact_address = models.TextField(_('آدرس دقیق'), )
-    apartment_number = models.PositiveSmallIntegerField(_('پلاک'), )
-    unit = models.PositiveSmallIntegerField(_('واحد'), null=True)
-    zip_code = models.PositiveIntegerField(_('کدپستی'), null=True)
-
-    def __str__(self):
-        return self.exact_address
-
-    class Meta:
-        verbose_name_plural = 'آدرس‌ها'
-        verbose_name = 'آدرس'
-
 
 class Customer(AbstractUser):
     username = None
@@ -60,7 +45,6 @@ class Customer(AbstractUser):
     first_name = models.CharField(_('نام'), max_length=150)
     last_name = models.CharField(_('نام‌خانوادگی'), max_length=150)
     email = models.EmailField(_('ایمیل'), unique=True)
-    addresses = models.ManyToManyField(Address, related_name='customers', blank=True)
 
     USERNAME_FIELD = 'mobile'
     REQUIRED_FIELDS = ['first_name', 'last_name']
@@ -73,3 +57,21 @@ class Customer(AbstractUser):
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
+
+
+class Address(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='addresses',
+                                 verbose_name=_('کاربر'))
+    province = models.CharField(_('استان'), max_length=200)
+    city = models.CharField(_('شهر'), max_length=200)
+    exact_address = models.TextField(_('آدرس دقیق'), )
+    apartment_number = models.PositiveSmallIntegerField(_('پلاک'), )
+    unit = models.PositiveSmallIntegerField(_('واحد'), blank=True, null=True)
+    zip_code = models.PositiveIntegerField(_('کدپستی'), blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.city} - {self.exact_address}'
+
+    class Meta:
+        verbose_name_plural = 'آدرس‌ها'
+        verbose_name = 'آدرس'

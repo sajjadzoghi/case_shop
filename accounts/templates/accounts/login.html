@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% block title %}ورود به حساب کاربری{% endblock %}
+
 {% block style %}
     <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
 {% endblock %}
@@ -11,11 +13,13 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-body">
-                    <form method="POST" action="{% url 'reset_password_mobile' %}" id="reset-password-mobile-form" enctype="multipart/form-data">
+                    <form method="POST" action="{% url 'reset_password_mobile' %}" id="reset-password-mobile-form"
+                          enctype="multipart/form-data">
 
                         <div class="form-group" id="reset-password-mobile-group">
                             <label for="reset-password-mobile">:شماره موبایل کاربری خود را وارد کنید</label>
-                            <input type="text" class="form-control" name="reset-password-mobile" id="reset-password-mobile">
+                            <input type="text" class="form-control" name="reset-password-mobile"
+                                   id="reset-password-mobile">
                         </div>
                         <div class="btn-group" id="reset-password-mobile-btn-group">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
@@ -32,11 +36,13 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-body">
-                    <form method="POST" action="{% url 'reset_password_email' %}" id="reset-password-email-form" enctype="multipart/form-data">
+                    <form method="POST" action="{% url 'reset_password_email' %}" id="reset-password-email-form"
+                          enctype="multipart/form-data">
 
                         <div class="form-group" id="reset-password-email-group">
                             <label for="reset-password-email">:ایمیل کاربری خود را وارد کنید</label>
-                            <input type="text" class="form-control" name="reset-password-email" id="reset-password-email">
+                            <input type="text" class="form-control" name="reset-password-email"
+                                   id="reset-password-email">
                         </div>
                         <div class="btn-group" id="reset-password-email-btn-group">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">انصراف</button>
@@ -53,10 +59,12 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-body">
-                    <form method="POST" action="{% url 'verify_otp_reset_password' %}" id="reset-password-otp-form" enctype="multipart/form-data">
+                    <form method="POST" action="{% url 'verify_otp_reset_password' %}" id="reset-password-otp-form"
+                          enctype="multipart/form-data">
                         <div class="form-group" id="reset-password-otp-group">
                             <label for="reset-password-otp"></label>
-                            <input type="number" class="form-control" name="reset-password-otp" id="reset-password-otp" maxlength="6" minlength="6">
+                            <input type="number" class="form-control" name="reset-password-otp" id="reset-password-otp"
+                                   maxlength="6" minlength="6">
                         </div>
                         <div class="form-group d-none" id="reset-user-group">
                             <label for="reset-user"></label>
@@ -81,7 +89,8 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-body">
-                    <form method="POST" action="{% url 'confirm_reset_password' %}" id="new-reset-password-form" enctype="multipart/form-data">
+                    <form method="POST" action="{% url 'confirm_reset_password' %}" id="new-reset-password-form"
+                          enctype="multipart/form-data">
 
                         <div class="form-group" id="new-reset-password-group">
                             <label for="new-reset-password"></label>
@@ -105,29 +114,35 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row content-row">
-        <div class="card col-10">
+    <div class="row login-row">
+        <div class="card col-4">
             <form method="POST" id="login-form">
                 {% csrf_token %}
-                {{ login_form.non_field_errors }}
-                {{ login_form.mobile.errors }}
-                {{ login_form.password.errors }}
+                {% for error in login_form.non_field_errors %}
+                <p class="text-danger">{{ error }}*</p>
+                {% endfor %}
+                {% for error in login_form.mobile.errors %}
+                <p class="text-danger">{{ error }}*</p>
+                {% endfor %}
+                {% for error in login_form.password.errors %}
+                <p class="text-danger">{{ error }}*</p>
+                {% endfor %}
+
                 <div class="form-group" id="mobile-group">
                     <label for="{{ login_form.mobile.id_for_label }}">:شماره موبایل</label>
-                    <input type="text" class="form-control" name="mobile" id="mobile">
+                    <input type="text" class="form-control" name="mobile" id="id_mobile">
                 </div>
                 <div class="form-group" id="password-group">
                     <label for="{{ login_form.password.id_for_label }}">:رمز عبور</label>
-                    <input type="password" class="form-control" name="password" id="password">
+                    <input type="password" class="form-control" name="password" id="id_password">
                 </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-danger">انصراف</button>
-                    <button type="submit" class="btn btn-submit mr-3" id="login-btn">ورود به
-                        کالاشاپ
-                    </button>
-                </div>
+                <button type="submit" class="btn btn-submit mr-auto" id="login-btn">ورود به
+                    کالاشاپ
+                </button>
             </form>
-            <button id="forget-btn" onclick="forget_password()">رمز عبورم را فراموش کرده‌ام</button>
+            <button class="btn btn-secondary mr-5" id="forget-btn" onclick="forget_password()">رمز عبورم را فراموش
+                کرده‌ام
+            </button>
         </div>
     </div>
 {% endblock %}

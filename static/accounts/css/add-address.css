@@ -1,24 +1,19 @@
-.login-row .card {
+.add-address-row .card {
     border-radius: 2%;
-    min-height: 28rem;
+    min-height: 30rem;
     padding-bottom: 2rem;
     margin-left: auto;
     margin-right: auto;
 }
 
-.login-row .card:hover {
+.add-address-row .card:hover {
     box-shadow: unset;
 }
 
-#login-form {
-    width: 20rem;
-    text-align: right;
+#add-address-form {
+    direction: rtl;
+    width: fit-content;
     margin-top: 2rem;
     margin-left: auto;
     margin-right: auto;
-}
-
-#forget-btn {
-    width: 50%;
-    align-self: end;
 }

@@ -148,7 +148,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = 'accounts.Customer'
 
-LOGIN_URL = 'accounts/login/'
+LOGIN_URL = '/accounts/login/'
 
 # rest framework configuration
 REST_FRAMEWORK = {

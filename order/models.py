@@ -30,10 +30,9 @@ class Order(models.Model):
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, related_name='orders',
                                  verbose_name=_('کاربر'))
     datetime = models.DateTimeField(_('تاریخ '), auto_now_add=True)
-    shipping = models.CharField(_('نوع پست'), choices=shipping_types, max_length=10)
+    shipping = models.CharField(_('نوع پست'), choices=shipping_types, max_length=20, default=sefareshi)
     status = models.CharField(_('وضعیت'), choices=order_status, max_length=20, default=bargiri)
-    address = models.ForeignKey(Address, on_delete=models.RESTRICT, blank=True, null=True, related_name='orders',
-                                verbose_name=_('آدرس'))
+    address = models.ForeignKey(Address, on_delete=models.RESTRICT, related_name='orders', verbose_name=_('آدرس'))
 
     class Meta:
         verbose_name_plural = 'سفارش‌ها'
@@ -58,16 +57,16 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name=_('شماره سفارش'))
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name=_('سفارش'))
     product = models.ForeignKey(Product, on_delete=models.RESTRICT, verbose_name=_('محصول'))
     quantity = models.PositiveIntegerField(_('تعداد'), )
 
     class Meta:
-        verbose_name_plural = 'محصولات هر سفارش'
-        verbose_name = 'محصول در یک سفارش'
+        verbose_name_plural = 'آیتم‌های سفارش'
+        verbose_name = 'آیتم سفارش'
 
     def __str__(self):
-        return f'{self.order}'
+        return f'{self.product} - {self.quantity}'
 
     @property
     def total_item_price(self):
