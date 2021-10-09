@@ -1,7 +1,10 @@
 from django.contrib.auth import login, get_user_model, logout
-from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
+from django.views.generic import CreateView
+
 from accounts.forms import LoginForm
+from accounts.models import Address
 
 Customer = get_user_model()
 
@@ -15,8 +18,8 @@ def login_view(request):
         if login_form.is_valid():
             login(request, Customer.objects.get(mobile=login_form.cleaned_data['mobile']))
             if 'next' in request.GET:
-                HttpResponseRedirect(request.GET['next'])
-            return redirect('product:all_product')
+                return redirect(request.GET['next'])
+            return redirect('product:all_products')
 
     return render(request, 'accounts/login.html', context={
         'login_form': login_form
@@ -25,4 +28,15 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('product:all_product')
+    return redirect('product:all_products')
+
+
+# class AddAddress(LoginRequiredMixin, CreateView):
+#     model = Address
+#     form_class = AddressForm
+#     template_name = 'order/create-order.html'
+#     success_url = '/order/order-result/'
+#
+#     def form_valid(self, form):
+#         form.instance.customer = self.request.user
+#         return super().form_valid(form)

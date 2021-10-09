@@ -24,58 +24,48 @@
     margin-top: 1rem;
 }
 
-.w3-col{float:left;width:100%}
-.w3-col.s1{width:8.33333%}.w3-col.s2{width:16.66666%}.w3-col.s3{width:19.99999%}.w3-col.s4{width:33.33333%}
-.w3-opacity,.w3-hover-opacity:hover{opacity:0.60}.w3-opacity-off,.w3-hover-opacity-off:hover{opacity:1}
+.w3-col {
+    float: left;
+    width: 100%
+}
+
+.w3-col.s1 {
+    width: 8.33333%
+}
+
+.w3-col.s2 {
+    width: 16.66666%
+}
+
+.w3-col.s3 {
+    width: 19.99999%
+}
+
+.w3-col.s4 {
+    width: 33.33333%
+}
+
+.w3-opacity, .w3-hover-opacity:hover {
+    opacity: 0.60
+}
+
+.w3-opacity-off, .w3-hover-opacity-off:hover {
+    opacity: 1
+}
 
 #product-form {
     direction: rtl;
 }
 
-.value-button {
-  display: inline-block;
-  border: 1px solid #ddd;
-  margin: 0px;
-  width: 40px;
-  height: 20px;
-  text-align: center;
-  vertical-align: middle;
-  padding: 11px 0;
-  background: #eee;
-  user-select: none;
+#increase {
+    border-radius: 8px 0 0 8px;
 }
 
-.value-button:hover {
-  cursor: pointer;
+#decrease {
+    border-radius: 0 8px 8px 0;
 }
 
-form #increase {
-  margin-right: -4px;
-  border-radius: 8px 0 0 8px;
-}
-
-form #decrease {
-  margin-left: -4px;
-  border-radius: 0 8px 8px 0;
-}
-
-form #input-wrap {
-  margin: 0px;
-  padding: 0px;
-}
-
-input#quantity {
-  text-align: center;
-  border: none;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  margin: 0px;
-  width: 40px;
-  height: 40px;
-}
-
-input[type=quantity]::-webkit-inner-spin-button,
-input[type=quantity]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+#quantity {
+    border-radius: unset;
+    width: fit-content;
 }

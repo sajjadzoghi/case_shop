@@ -1,9 +1,5 @@
 // jQuery & AJAX for showing products list with pagination
 
-function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
 let content = $('.products-row');
 let pagination = $('.pagination');
 
@@ -81,7 +77,7 @@ function page(url) {
                             </div>
                             <div class="row" style="margin-left: 3px">
                                 <p style="margin-top: 3px">تومان</p>
-                                <h3 id="price${product.id}">&nbsp${product.final_price}</h3>
+                                <h3 id="final-price${product.id}">&nbsp${product.final_price}</h3>
                             </div>
                             <a href="${product.id}" class="stretched-link"></a>
                         </div>
@@ -123,4 +119,8 @@ function page(url) {
             }
         });
     }
+}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }

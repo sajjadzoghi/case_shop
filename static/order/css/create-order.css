@@ -1,24 +1,24 @@
-.login-row .card {
+.create-order-row .card {
     border-radius: 2%;
-    min-height: 28rem;
+    min-height: 35rem;
     padding-bottom: 2rem;
     margin-left: auto;
     margin-right: auto;
 }
 
-.login-row .card:hover {
+.create-order-row .card:hover {
     box-shadow: unset;
 }
 
-#login-form {
+#create-order-form {
+    direction: rtl;
     width: 20rem;
     text-align: right;
     margin-top: 2rem;
     margin-left: auto;
-    margin-right: auto;
+    padding-right: 1rem;
 }
 
-#forget-btn {
-    width: 50%;
-    align-self: end;
+#create-order-form .form-group {
+    width: 30rem;
 }

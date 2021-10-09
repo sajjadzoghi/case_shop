@@ -30,6 +30,7 @@ function showDivs(n) {
 let quantity = $('#quantity').val();
 let inventory = $('#inventory').val();
 
+
 function increaseValue() {
     if (inventory > quantity) {
         quantity++;
@@ -45,29 +46,32 @@ function decreaseValue() {
 }
 
 
-// check if product is in SessionStorage
+// check if product is in sessionStorage
 let product_id = $('#product-id').val();
-let name = $('#name-fa').html();
-let image = $('#image').val();
-let color = $('#color').val();
-let price = $('#price').val();
-let guarantee = $('#guarantee').val();
 
 if (sessionStorage.items) {
     let items = JSON.parse(sessionStorage.items);
     for (let item of items) {
-        if (item.id === product_id) {
+        if (item.product === product_id) {
             $(`#add-product${product_id}`).prop('disabled', 'true').addClass('active');
         }
     }
 }
-// adding product to cart through "SessionStorage"
+
+
+// adding product to shopping-cart through "sessionStorage"
 $(`#product-form`).submit(function (e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
 
+    let name = $('#name-fa').html();
+    let image = $('#image').val();
+    let color = $('#color').val();
+    let price = $('#price').val();
+    let guarantee = $('#guarantee').val();
+
     var form = $(this);
     var product_data = {
-        'id': product_id,
+        'product': product_id,
         'name': name,
         'image': image,
         'color': color,
@@ -77,7 +81,7 @@ $(`#product-form`).submit(function (e) {
     };
     $('#is-empty').remove();
     $('#cart-btn-group').show();
-    $('#empty-button').hide();
+    $('#empty-button').remove();
 
     if (sessionStorage.cart_quantity) {
         sessionStorage.cart_quantity = Number(sessionStorage.cart_quantity) + 1;

@@ -4,17 +4,14 @@
 
 {% block title %}همه محصولات{% endblock %}
 
-{% block style %}
-    <link rel="stylesheet" href="{% static 'product/css/all-products.css' %}">
-{% endblock %}
-
 {% block content %}
     <div class="row">
         <div class="col-12 col-md-9">
             <div class="row ord-row">
                 <div class="col-12">
-                    <p style="padding-right: 2px">فروشگاه اینترنتی کالاشاپ / کالای دیجیتال / موبایل /
-                        گوشی</p>
+                    <p style="padding-right: 2px">فروشگاه اینترنتی کالاشاپ / <a class="text-primary"
+                                                                                href="{% url 'product:all_products' %}">همه
+                        محصولات</a></p>
                     <div class="card ord-card">
                         <div class="card-body row flex-row-reverse">
                             <p class="card-text">:مرتب سازی براساس&nbsp<i class="fa fa-fw fa-list-ol"></i></p>

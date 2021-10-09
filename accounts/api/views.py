@@ -1,11 +1,9 @@
-# This class returns the string needed to generate the key
 import base64
 from datetime import datetime
 # from kavenegar import *
 import pyotp
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from django.http import Http404
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -13,7 +11,8 @@ from rest_framework.views import APIView
 
 from accounts.api.serializer import (RegistrationSerializer, ChangePasswordSerializer, ConfirmResetPasswordSerializer,
                                      ResetPasswordByMobileSerializer,
-                                     ResetPasswordByEmailSerializer)
+                                     ResetPasswordByEmailSerializer, AddressSerializer)
+from accounts.models import Address
 from shop.utils import send_reset_password_mail
 
 Customer = get_user_model()
@@ -173,3 +172,12 @@ class ConfirmResetPassword(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'first_name': customer.first_name}, status=status.HTTP_200_OK)
+
+
+class AddAddress(generics.ListCreateAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    permission_classes = [IsAuthenticated, ]
+
+    def perform_create(self, serializer):
+        serializer.save(customer=self.request.user)

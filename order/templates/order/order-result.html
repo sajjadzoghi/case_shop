@@ -1,0 +1,28 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %}ثبت سفارش{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'order/css/order-result.css' %}">
+{% endblock %}
+
+
+{% block content %}
+    <div class="row order-result-row">
+        <div class="card col-7">
+            <i class="text-success fa fa-fw fa-check-circle"></i>
+            <h3 class="alert alert-success text-center mt-2">.سفارش شما با موفقیت پرداخت و ثبت گردید</h3>
+            <div class="alert alert-secondary">
+                <h5 class="text-center">.از اینکه کالاشاپ را برای خرید انتخاب کردید، از شما سپاسگزاریم</h5>
+
+                <h5 id="order-id" class="text-center text-dark"></h5>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'order/js/order-result.js' %}"></script>
+{% endblock %}

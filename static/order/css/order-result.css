@@ -1,0 +1,26 @@
+.order-result-row .card {
+    border-radius: 2%;
+    min-height: 35rem;
+    padding-bottom: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.order-result-row .card:hover {
+    box-shadow: unset;
+}
+
+/*.order-result-row h2 {*/
+/*    width: 20rem;*/
+/*    text-align: right;*/
+/*    margin-top: 2rem;*/
+/*    margin-left: auto;*/
+/*    padding-right: 1rem;*/
+/*}*/
+
+.order-result-row i {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 10rem;
+    align-self: center;
+}

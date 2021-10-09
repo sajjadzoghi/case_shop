@@ -4,6 +4,8 @@ from rest_framework import serializers
 from rest_framework.fields import EmailField
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 
+from accounts.models import Address
+
 Customer = get_user_model()
 
 EmailField.default_error_messages = {
@@ -96,7 +98,6 @@ class UpdateCustomerSerializer(serializers.ModelSerializer):
         instance.first_name = validated_data['first_name']
         instance.last_name = validated_data['last_name']
         instance.email = validated_data['email']
-        instance.username = validated_data['username']
         instance.save()
 
         return instance
@@ -133,3 +134,18 @@ class ConfirmResetPasswordSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    customer = serializers.ReadOnlyField(source='customer.email')
+    province = serializers.CharField(error_messages={'blank': '.استان وارد نشده'})
+    city = serializers.CharField(error_messages={'blank': '.شهر وارد نشده', })
+    exact_address = serializers.CharField(error_messages={'blank': '.آدرس وارد نشده', })
+    apartment_number = serializers.IntegerField(error_messages={'invalid': '.پلاک وارد نشده', })
+    unit = serializers.IntegerField(required=False)
+    zip_code = serializers.CharField(required=False)
+
+    class Meta:
+        model = Address
+        fields = ['customer', 'province', 'city', 'exact_address', 'apartment_number', 'unit', 'zip_code', ]
+
