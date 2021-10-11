@@ -11,12 +11,12 @@
 {% block content %}
     <div class="row create-order-row">
         <div class="card col-7">
-            <form id="create-order-form"></form>
             <table id="items-table" class="table table-striped" style="direction: rtl">
                 <thead>
                 <tr>
                     <th scope="col">تصویر</th>
                     <th scope="col">نام</th>
+                    <th scope="col">رنگ</th>
                     <th scope="col">قیمت واحد</th>
                     <th scope="col">تعداد</th>
                     <th scope="col">قیمت نهایی</th>
@@ -24,28 +24,29 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td id="item-image"><img style="width: 5rem" src=""></td>
-                    <td id="item-name"></td>
-                    <td id="item-price"></td>
-                    <td id="item-count"></td>
-                    <td id="item-final_price"></td>
-                    <td class="item-delete"><i style="font-size: x-large" class="fa fa-fw fa-trash"></i>
-                    </td>
-                </tr>
                 </tbody>
             </table>
             <div class="row">
-                <div class="col-2">
-                    <button class="btn btn-secondary" id="add-address-btn"><a class="text-white" href="{% url 'order:add_address' %}">واردکردن آدرس جدید</a></button>
+                <div class="col-5">
+                    <button class="btn btn-secondary" style="margin-top: 9.7rem;" id="add-address-btn">
+                        <a class="text-white"
+                           href="{% url 'order:add_address' %}">واردکردن
+                            آدرس جدید</a></button>
                 </div>
-                <div class="col-10">
+                <div class="col-7">
+                    <form method="POST" action="{% url 'check_coupon' %}" id="coupon-form"
+                          enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group row" id="coupon-group">
+                            <label class="col-0" for="coupon">کد تخفیف:&nbsp;</label>
+                            <input type="text" class="form-control col-6" name="coupon" id="coupon">
+                            <button type="submit" id="coupon-btn" class="btn btn-primary mr-2">اعمال تخفیف</button>
+                        </div>
+                    </form>
+
                     <form method="POST" id="create-order-form">
                         {% csrf_token %}
                         {% for error in form.non_field_errors %}
-                            <p class="text-danger">{{ error }}*</p>
-                        {% endfor %}
-                        {% for error in form.items.errors %}
                             <p class="text-danger">{{ error }}*</p>
                         {% endfor %}
                         {% for error in form.shipping.errors %}
@@ -54,30 +55,26 @@
                         {% for error in form.address.errors %}
                             <p class="text-danger">{{ error }}*</p>
                         {% endfor %}
-                        <div class="form-group row d-none" id="items-group">
-                            <label class="col-0" for="{{ form.items.id_for_label }}">پست:&nbsp;</label>
-                            {{ form.items }}
-                        </div>
                         <div class="form-group row" id="shipping-group">
-                            <label class="col-0" for="{{ form.shipping.id_for_label }}">پست:&nbsp;</label>
+                            <label class="col-0" for="{{ form.shipping.id_for_label }}">نحوه پست:&nbsp;</label>
                             {{ form.shipping }}
                         </div>
                         <div class="form-group row" id="address-group">
                             <label class="col-0" for="{{ form.address.id_for_label }}">آدرس:&nbsp;</label>
-                            <select type="text" class="form-control col-10" name="address" id="id_address">
+                            <select type="text" class="form-control col-8 mr-3" name="address" id="id_address">
                                 {% for address in user.addresses.all %}
                                     <option value="{{ address.id }}">{{ address }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-
-                        <button type="submit" class="btn btn-submit" id="payment-btn">پرداخت
-                            و ثبت نهایی سفارش
-                        </button>
-                        <button type="button" class="btn btn-danger mr-3"><a class="text-white"
-                                                                             href="{% url 'product:all_products' %}">انصراف</a>
-                        </button>
-
+                        <div class="mt-5">
+                            <button type="submit" class="btn btn-submit" id="payment-btn">پرداخت
+                                و ثبت نهایی سفارش
+                            </button>
+                            <button type="button" class="btn btn-danger mr-3"><a class="text-white"
+                                                                                 href="{% url 'product:all_products' %}">انصراف</a>
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>

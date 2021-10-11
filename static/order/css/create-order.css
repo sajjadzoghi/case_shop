@@ -10,7 +10,7 @@
     box-shadow: unset;
 }
 
-#create-order-form {
+#create-order-form, #coupon-form {
     direction: rtl;
     width: 20rem;
     text-align: right;
@@ -21,4 +21,8 @@
 
 #create-order-form .form-group {
     width: 30rem;
+}
+
+.btn-secondary {
+    margin-top: 10rem;
 }

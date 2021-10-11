@@ -6,20 +6,28 @@
 
 
 {% block content %}
-    <p id="order-id">{{ order_id }}</p>
     <form method="POST" action="{% url 'order:add_item' %}" class="d-none" id="add-item-form">
         {% csrf_token %}
         <div class="form-group" id="product-group">
             <label for="{{ form.product.id_for_label }}"></label>
-            <input type="text" class="form-control" name="product" id="product">
+            <input type="text" class="form-control" name="product" id="id_product">
         </div>
         <div class="form-group" id="order-group">
             <label for="{{ form.order.id_for_label }}"></label>
-            <input type="text" class="form-control" name="order" id="order">
+            <input type="text" class="form-control" name="order" id="id_order" value="{{ order_id }}">
         </div>
         <div class="form-group" id="quantity-group">
             <label for="{{ form.quantity.id_for_label }}"></label>
-            <input type="text" class="form-control" name="quantity" id="quantity">
+            <input type="text" class="form-control" name="quantity" id="id_quantity">
+        </div>
+        <button type="submit">sub</button>
+    </form>
+
+    <form method="POST" action="{% url 'order:order_result' %}" class="d-none" id="del-coupon-form">
+        {% csrf_token %}
+        <div class="form-group" id="del-coupon-group">
+            <label for="del-coupon"></label>
+            <input type="text" class="form-control" name="del-coupon" id="del-coupon">
         </div>
         <button type="submit">sub</button>
     </form>
