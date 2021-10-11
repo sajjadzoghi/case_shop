@@ -8,7 +8,7 @@ from django.views.generic import DetailView, ListView, CreateView, TemplateView
 from accounts.forms import AddressForm
 from accounts.models import Address
 from order.forms import OrderForm, OrderItemForm
-from order.models import Order, OrderItem
+from order.models import Order, OrderItem, Coupon
 
 
 # Create your views here.
@@ -39,11 +39,19 @@ class AddOrderItem(LoginRequiredMixin, CreateView):
     model = OrderItem
     form_class = OrderItemForm
     template_name = 'order/add-item.html'
-    success_url = '/orders/order-result/'
+    success_url = '/orders/add-item/'
 
 
-class OrderResult(TemplateView):
-    template_name = 'order/order-result.html'
+def order_result(request):
+    if request.method == 'POST':
+        try:
+            user_coupon = Coupon.objects.get(code=request.POST['del-coupon'])
+            user_coupon.customers.remove(request.user)
+            user_coupon.save()
+            return render(request, 'order/order-result.html')
+        except (KeyError, Coupon.DoesNotExist):
+            return render(request, 'order/order-result.html')
+    return render(request, 'order/order-result.html')
 
 
 class DetailOrder(DetailView):

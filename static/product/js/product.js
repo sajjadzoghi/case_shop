@@ -30,6 +30,9 @@ function showDivs(n) {
 let quantity = $('#quantity').val();
 let inventory = $('#inventory').val();
 
+$("[type='number']").keypress(function (evt) {
+    evt.preventDefault();
+})
 
 function increaseValue() {
     if (inventory > quantity) {

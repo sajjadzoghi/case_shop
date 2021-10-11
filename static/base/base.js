@@ -44,15 +44,9 @@ if (sessionStorage.items) {
 }
 
 function remove_item(id) {
-    sessionStorage.cart_quantity = Number(sessionStorage.cart_quantity) - 1;
-    $('#cart-quantity').html(sessionStorage.cart_quantity);
-    if (sessionStorage.cart_quantity === '0') {
-        $('#cart-total-price').hide();
-        $('#cart-btn-group').hide();
-        $('#cart-modal .modal-body').prepend(`<h4 id="is-empty">!سبد خرید شما خالی است</h4>`);
-        $('#cart-modal .modal-body').append(`<button type="button" id="empty-button" class="btn btn-danger" data-dismiss="modal">بستن</button>`);
-    }
-
+    sessionStorage.removeItem('coupon_code');
+    sessionStorage.removeItem('coupon_amount');
+    sessionStorage.removeItem('total_price_coupon');
     let items = JSON.parse(sessionStorage.items);
     let new_items = [];
     let new_total = 0;
@@ -70,4 +64,23 @@ function remove_item(id) {
 
     $(`#cart-modal #item${id}`).remove();
     $(`#add-product${id}`).prop('disabled', '').removeClass('active');
+
+    $('#coupon-btn').prop('disabled', '');
+    $('#coupon-form p').remove();
+    $('.tbl-after').remove();
+    $('#table-total').show();
+    $('#table-total').html(` مبلغ کل سفارش : ${sessionStorage.total_price} تومان`);
+    $(`table #item${id}`).remove();
+
+
+    sessionStorage.cart_quantity = Number(sessionStorage.cart_quantity) - 1;
+    $('#cart-quantity').html(sessionStorage.cart_quantity);
+    if (sessionStorage.cart_quantity === '0') {
+        $('#cart-total-price').hide();
+        $('#cart-btn-group').hide();
+        $('#cart-modal .modal-body').prepend(`<h4 id="is-empty">!سبد خرید شما خالی است</h4>`);
+        $('#cart-modal .modal-body').append(`<button type="button" id="empty-button" class="btn btn-danger" data-dismiss="modal">بستن</button>`);
+        sessionStorage.removeItem('items');
+        window.location.href = "/"
+    }
 }
