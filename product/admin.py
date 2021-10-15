@@ -35,9 +35,10 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name_fa', 'price', ]
+    list_display = ['name_fa', 'price', 'inventory']
     search_fields = ['name_fa', ]
     filter_horizontal = ['images', ]
+    readonly_fields = ['date_created', ]
     inlines = [GuaranteeInline, ProductDiscountInline]
 
 

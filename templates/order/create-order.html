@@ -8,6 +8,58 @@
     <link rel="stylesheet" href="{% static 'order/css/create-order.css' %}">
 {% endblock %}
 
+{% block modal %}
+    <div class="modal fade" id="add-address-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h5 class="alert alert-info m-2 mt-2">« ثبت آدرس جدید »</h5>
+                    <form method="post" action="{% url 'add_address' %}" id="add-address-form">
+                        {% csrf_token %}
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="add-province">استان:</label>
+                                <select class="form-control province" name="add-province" id="add-province"
+                                        onchange="Func(this.value)">
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="add-city">شهر:</label>
+                                <select class="form-control city" name="add-city" id="add-city"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="add-exact_address">آدرس دقیق:</label>
+                            <input type="text" class="form-control" name="add-exact_address" id="add-exact_address">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="add-No">پلاک:</label>
+                                <input type="number" class="form-control" name="add-apartment_number" id="add-No">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="add-unit">واحد:</label>
+                                <input type="number" class="form-control" name="add-unit" id="add-unit">
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label for="add-zip_code">کد پستی:</label>
+                                <input type="number" class="form-control" name="add-zip_code" id="add-zip_code">
+                            </div>
+                        </div>
+                        <div id="add-address-btn-group" class="mt-3">
+
+                            <button type="submit" class="btn btn-submit mr-0">ثبت آدرس</button>
+
+                            <button class="btn btn-danger mr-3" data-dismiss="modal">انصراف</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block content %}
     <div class="row create-order-row">
         <div class="card col-7">
@@ -28,10 +80,10 @@
             </table>
             <div class="row">
                 <div class="col-5">
-                    <button class="btn btn-secondary" style="margin-top: 9.7rem;" id="add-address-btn">
-                        <a class="text-white"
-                           href="{% url 'order:add_address' %}">واردکردن
-                            آدرس جدید</a></button>
+                    <button class="btn btn-secondary" data-toggle="modal"
+                            data-target="#add-address-modal" style="margin-top: 9.7rem;"
+                            id="add-address-btn">واردکردن آدرس جدید
+                    </button>
                 </div>
                 <div class="col-7">
                     <form method="POST" action="{% url 'check_coupon' %}" id="coupon-form"

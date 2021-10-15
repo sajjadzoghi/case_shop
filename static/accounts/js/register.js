@@ -5,10 +5,11 @@ $('#register-form').submit(function (e) {
     var url = form.attr('action');
     var form_data = {
         'mobile': $('#reg-mobile').val(),
-        'first_name': $('#first_name').val(),
-        'last_name': $('#last_name').val(),
-        'email': $('#email').val(),
+        'first_name': $('#reg-first_name').val(),
+        'last_name': $('#reg-last_name').val(),
+        'email': $('#reg-email').val(),
         'password': $('#reg-password').val(),
+        'password2': $('#reg-password2').val(),
     };
 
     $.ajax({
@@ -44,10 +45,11 @@ $('#otp-form').submit(function (e) {
     let url = form.attr('action');
     let form_data = {
         'mobile': $('#reg-mobile').val(),
-        'first_name': $('#first_name').val(),
-        'last_name': $('#last_name').val(),
-        'email': $('#email').val(),
+        'first_name': $('#reg-first_name').val(),
+        'last_name': $('#reg-last_name').val(),
+        'email': $('#reg-email').val(),
         'password': $('#reg-password').val(),
+        'password2': $('#reg-password2').val(),
         'otp': $('#otp').val(),
     };
 
@@ -55,12 +57,12 @@ $('#otp-form').submit(function (e) {
         type: "Post",
         url: url,
         data: form_data,
-        success: function (resp) {
+        success: function () {
             $('#otp-form #otp-group').hide('slow');
             $('#otp-form #otp-btn-group').hide('slow');
             $(form).trigger('reset');
             $('#otp-form p').remove();
-            $(form).prepend(`<h5 class="text-success">«${$('#first_name').val()} عزیز، ثبت‌نام شما با موفقیت انجام شد»</h5>`);
+            $(form).prepend(`<h5 class="text-success">«${$('#reg-first_name').val()} عزیز، ثبت‌نام شما با موفقیت انجام شد»</h5>`);
             $(form).append(`<button type="button" id="close" class="btn btn-danger" data-dismiss="modal">بستن</button>`);
             $('#register-form').trigger('reset');
         },
@@ -71,7 +73,7 @@ $('#otp-form').submit(function (e) {
             for (let error_item in errors) {
                 $(form).prepend(`<p class="text-danger">${errors[error_item][0]}*</p>`);
             }
-            $(form).append(`<button id="otp-again" onclick="$('#register-form').submit()" class="text-danger">ارسال مجدد</button>`);
+            $(form).append(`<div id="otp-again" onclick="$('#register-form').submit()" class="btn btn-secondary mr-0 mt-2">ارسال مجدد</div>`);
         }
     });
 });

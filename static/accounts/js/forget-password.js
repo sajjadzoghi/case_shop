@@ -31,7 +31,7 @@ $('#reset-password-mobile-form').submit(function (e) {
         data: form_data,
         success: function (resp) {
             $('#reset-password-mobile-modal').modal('hide');
-            $('#reset-password-otp-form #otp-again').remove();
+            $('#reset-password-otp-form #reset-password-otp-again').remove();
             $('#reset-password-otp-form p').remove();
             $('#reset-password-otp-group label').html('لطفاً کد تأیید ۶رقمی ارسال شده به گوشی خود را وارد کنید');
             $('#reset-user').attr('value', resp.mobile);
@@ -63,7 +63,7 @@ $('#reset-password-email-form').submit(function (e) {
         data: form_data,
         success: function (resp) {
             $('#reset-password-email-modal').modal('hide');
-            $('#reset-password-otp-form #otp-again').remove();
+            $('#reset-password-otp-form #reset-password-otp-again').remove();
             $('#reset-password-otp-form p').remove();
             $('#reset-password-otp-group label').html('کد تأییدی ۶رقمی به ایمیل شما ارسال شد. لطفاً آن را در فیلد زیر وارد کنید')
             $('#reset-user').attr('value', resp.email);
@@ -98,7 +98,7 @@ $('#reset-password-otp-form').submit(function (e) {
         success: function (resp) {
             $('#reset-password-otp-modal').modal('hide');
             $('#reset-user-final').attr('value', resp.mobile);
-            $('#new-reset-password-group label').html(`:${resp.first_name} عزیز، رمز عبور جدید خود را وارد کنید`)
+            $('#new-reset-password-group label').html(`:${resp.first_name} عزیز، رمزعبور جدید خود را وارد کنید`)
             $('#reset-password-mobile-form .form-group').show();
             $('#reset-password-mobile-form .btn-group').show();
             $('#reset-password-mobile-form h5').remove();
@@ -106,6 +106,7 @@ $('#reset-password-otp-form').submit(function (e) {
             $('#new-reset-password-modal').modal('show');
             $('#reset-password-email-form').trigger('reset');
             $('#reset-password-mobile-form').trigger('reset');
+            form.trigger('reset');
         },
         error: function (data) {
             $('#reset-password-otp-form p').remove();
@@ -113,7 +114,7 @@ $('#reset-password-otp-form').submit(function (e) {
             for (let error_item in errors) {
                 $(form).prepend(`<p class="text-danger">${errors[error_item][0]}*</p>`);
             }
-            $(form).append(`<button id="otp-again" onclick="$('#reset-password-${auth_type}-form').submit()" class="btn-primary">ارسال مجدد</button>`);
+            $(form).append(`<div id="reset-password-otp-again" onclick="$('#reset-password-${auth_type}-form').submit()" class="btn btn-secondary mr-0 mt-2">ارسال مجدد</div>`);
         }
     });
 });
@@ -126,6 +127,7 @@ $('#new-reset-password-form').submit(function (e) {
     var form_data = {
         'mobile': $('#reset-user-final').val(),
         'new_password': $('#new-reset-password').val(),
+        'new_password2': $('#new-reset-password2').val(),
     };
 
     $.ajax({
@@ -137,7 +139,7 @@ $('#new-reset-password-form').submit(function (e) {
             $('#new-reset-password-form .btn-group').hide('slow');
             $(form).trigger('reset');
             $('#new-reset-password-form p').remove();
-            $(form).prepend(`<h5 class="text-success">«${resp.first_name} عزیز، تغییر رمز عبور شما با موفقیت انجام شد»</h5>`);
+            $(form).prepend(`<h5 class="text-success">«${resp.first_name} عزیز، تغییر رمزعبور شما با موفقیت انجام شد»</h5>`);
             $(form).append(`<button type="button" id="close" class="btn btn-danger" data-dismiss="modal">بستن</button>`);
         },
         error: function (data) {

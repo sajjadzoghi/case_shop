@@ -1,3 +1,15 @@
+$.ajax({
+    type: "Get",
+    url: "/api/v1/categories/",
+    dataType: "json",
+    success: function (resp) {
+        for (let category of resp) {
+            $('.dropdown-cat').append(`<a href="/category/${category.id}">${category.name}<i class="fa fa-fw fa-${category.icon}"></i></a>`);
+        }
+    }
+});
+
+
 if (sessionStorage.cart_quantity) {
     $('#cart-quantity').html(sessionStorage.cart_quantity);
 } else {
@@ -6,11 +18,18 @@ if (sessionStorage.cart_quantity) {
 
 if (sessionStorage.total_price) {
     if (sessionStorage.total_price !== '0') {
-        $('#cart-total-price').html(`جمع کل: ${Number(sessionStorage.total_price)} تومان`);
+        $('#cart-total-price').html(`
+            جمع
+            کل: ${Number(sessionStorage.total_price)} تومان`);
     } else {
         $('#cart-total-price').hide();
         $('#cart-btn-group').hide();
-        $('#cart-modal .modal-body').prepend(`<h4 id="is-empty">!سبد خرید شما خالی است</h4>`);
+        $('#cart-modal .modal-body').prepend(` < h4
+            id = "is-empty" > !سبد
+            خرید
+            شما
+            خالی
+            است < /h4>`);
         $('#cart-modal .modal-body').append(`<button type="button" id="empty-button" class="btn btn-danger" data-dismiss="modal">بستن</button>`);
     }
 } else {
@@ -66,6 +85,7 @@ function remove_item(id) {
     $(`#add-product${id}`).prop('disabled', '').removeClass('active');
 
     $('#coupon-btn').prop('disabled', '');
+    $('#coupon').prop('disabled', '');
     $('#coupon-form p').remove();
     $('.tbl-after').remove();
     $('#table-total').show();
@@ -82,5 +102,35 @@ function remove_item(id) {
         $('#cart-modal .modal-body').append(`<button type="button" id="empty-button" class="btn btn-danger" data-dismiss="modal">بستن</button>`);
         sessionStorage.removeItem('items');
         window.location.href = "/"
+    }
+}
+
+
+// I.R.Iran provinces and cities for handling all kind of "address-forms" in all pages
+let provinces = {
+    'آذربایجان شرقی': ['آذرشهر', 'اسکو', 'اهر', 'بستان‌آباد', 'بناب', 'تبریز', 'جلفا', 'چاراویماق', 'سراب', 'شبستر', 'عجب‌شیر', 'کلیبر', 'مراغه', 'مرند', 'ملکان', 'میانه', 'ورزقان', 'هریس', 'هشترود'],
+    'اصفهان': ['آران و بیدگل', 'اردستان', 'اصفهان', 'برخوار و میمه', 'تیران و کرون', 'چادگان', 'خمینی‌شهر', 'خوانسار', 'سمیرم', 'شهرضا', 'سمیرم سفلی', 'فریدن', 'فریدون‌شهر', 'فلاورجان', 'کاشان', 'گلپایگان', 'لنجان', 'مبارکه', 'نائین', 'نجف‌آباد', 'نطنز'],
+    'تهران': ['اسلام‌شهر', 'پاکدشت', 'تهران', 'دماوند', 'رباط‌کریم', 'ری', 'ساوجبلاغ', 'شمیرانات', 'شهریار', 'فیروزکوه', 'کرج', 'نظرآباد', 'ورامین'],
+    'خراسان رضوی': ['بردسکن', 'تایباد', 'تربت جام', 'تربت حیدریه', 'چناران', 'خلیل‌آباد', 'خواف', 'درگز', 'رشتخوار', 'سبزوار', 'سرخس', 'فریمان', 'قوچان', 'کاشمر', 'کلات', 'گناباد', 'مشهد', 'مه ولات', 'نیشابور'],
+    'زنجان': ['ابهر', 'ایجرود', 'خدابنده', 'خرمدره', 'زنجان', 'طارم', 'ماه‌نشان'],
+    'سمنان': ['دامغان', 'سمنان', 'شاهرود', 'گرمسار', 'مهدی‌شهر'],
+    'قزوین': ['آبیک', 'البرز', 'بوئین‌زهرا', 'تاکستان', 'قزوین'],
+    'یزد': ['ابرکوه', 'اردکان', 'بافق', 'تفت', 'خاتم', 'صدوق', 'طبس', 'مهریز', 'مِیبُد', 'یزد'],
+}
+
+$('.province').append(`<option value="">--استان--</option>`);
+for (let province in provinces) {
+    $('.province').append(`<option value="${province}">${province}</option>`);
+}
+
+function Func(chosen_province) {
+    for (let province in provinces) {
+        if (province === chosen_province) {
+            $('.city').empty();
+            $('.city').append(`<option value="">--شهر--</option>`);
+            for (let city of provinces[province]) {
+                $('.city').append(`<option value="${city}">${city}</option>`);
+            }
+        }
     }
 }

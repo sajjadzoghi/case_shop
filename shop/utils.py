@@ -2,9 +2,14 @@ import threading
 from django.core.mail import send_mail
 
 
+def customer_image_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/category/product-<name>/<filename>
+    return f'customers/{instance.last_name}-{instance.mobile}/{filename}'
+
+
 def product_image_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/category/product-<name>/<filename>
-    return f'{instance.name}/{filename}'
+    return f'products/{instance.name}/{filename}'
 
 
 class EmailThreading(threading.Thread):

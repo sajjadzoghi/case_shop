@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext as _
+from shop.utils import customer_image_path
 
 
 class CustomUserManager(BaseUserManager):
@@ -45,6 +46,7 @@ class Customer(AbstractUser):
     first_name = models.CharField(_('نام'), max_length=150)
     last_name = models.CharField(_('نام‌خانوادگی'), max_length=150)
     email = models.EmailField(_('ایمیل'), unique=True)
+    image = models.ImageField(_('تصویر'), upload_to=customer_image_path, blank=True, null=True)
 
     USERNAME_FIELD = 'mobile'
     REQUIRED_FIELDS = ['first_name', 'last_name']

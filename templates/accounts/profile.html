@@ -1,10 +1,340 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base/base.html' %}
 
-</body>
-</html>
+{% load static %}
+
+{% block title %}حساب کاربری{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/add-address.css' %}">
+{% endblock %}
+
+{% block modal %}
+    <div class="modal fade" id="upload-image-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form method="POST" id="upload-image-form" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group" id="upload-image-group">
+                            <label for="{{ image_form.image.id_for_label }}" id="image-upload">
+                                برای انتخاب تصویر کلیک کنید
+                                <i class="fa fa-fw fa-plus-circle" style="font-size: 2rem"></i></label>
+                            {{ image_form.image }}
+                        </div>
+                        <div id="upload-image-btn-group">
+                            <button type="button" class="btn btn-danger mr-3" data-dismiss="modal">انصراف</button>
+                            <button name="send-img" type="submit" class="btn btn-submit" id="verify-otp-btn">
+                                تأیید و ارسال
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="change-mobile-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form method="post" action="{% url 'change_mobile' %}" id="change-mobile-form"
+                          class="address-form">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label for="new-mobile">شماره موبایل جدید خود را وارد کنید:</label>
+                            <input type="text" class="form-control" name="new-mobile" id="new-mobile">
+                        </div>
+                        <div id="new-mobile-btn-group" class="mt-3">
+                            <button type="submit" class="btn btn-submit mr-0 w-50">دریافت کد تأیید</button>
+                            <button class="btn btn-danger mr-3" data-dismiss="modal">انصراف</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="change-mobile-otp-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'verify_otp_change_mobile' %}" id="change-mobile-otp-form">
+                        {% csrf_token %}
+
+                        <div class="form-group" id="change-mobile-otp-group">
+                            <label for="change-mobile-otp">:لطفاً کد تأیید ۶رقمی ارسال شده به گوشی خود را وارد
+                                کنید</label>
+                            <input type="number" class="form-control" name="change-mobile-otp" id="change-mobile-otp"
+                                   maxlength="6" minlength="6">
+                        </div>
+                        <div id="change-mobile-otp-btn-group">
+                            <button type="button" class="btn btn-danger mr-3" data-dismiss="modal">انصراف</button>
+                            <button type="submit" class="btn btn-submit mr-0">
+                                ارسال
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade address-modal" id="add-address-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h5 class="alert alert-info m-2 mt-2">« ثبت آدرس جدید »</h5>
+                    <form method="post" action="{% url 'add_address' %}" id="add-address-form"
+                          class="address-form">
+                        {% csrf_token %}
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="add-province">استان:</label>
+                                <select class="form-control province" name="add-province" id="add-province"
+                                        onchange="Func(this.value)">
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="add-city">شهر:</label>
+                                <select class="form-control city" name="add-city" id="add-city"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="add-exact_address">آدرس دقیق:</label>
+                            <input type="text" class="form-control" name="add-exact_address" id="add-exact_address">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="add-No">پلاک:</label>
+                                <input type="number" class="form-control" name="add-apartment_number" id="add-No">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="add-unit">واحد:</label>
+                                <input type="number" class="form-control" name="add-unit" id="add-unit">
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label for="add-zip_code">کد پستی:</label>
+                                <input type="number" class="form-control" name="add-zip_code" id="add-zip_code">
+                            </div>
+                        </div>
+                        <div id="add-address-btn-group" class="mt-3">
+                            <button type="submit" class="btn btn-submit mr-0">ثبت آدرس</button>
+                            <button class="btn btn-danger mr-3" data-dismiss="modal">انصراف</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for address in user.addresses.all %}
+        <div class="modal fade address-modal" id="edit-address-modal{{ address.id }}">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h5 class="alert alert-info m-2 mt-2">« ویرایش آدرس »</h5>
+                        <form method="post" action="{% url 'edit_remove_address' address.id %}" class="address-form"
+                              id="edit-address-form{{ address.id }}">
+                            {% csrf_token %}
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="province{{ address.id }}">استان:</label>
+                                    <select class="form-control province" name="province{{ address.id }}"
+                                            id="province{{ address.id }}"
+                                            onchange="Func(this.value)">
+                                        <option id="chosen-province" value="{{ address.province }}"
+                                                selected>{{ address.province }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="city{{ address.id }}">شهر:</label>
+                                    <select class="form-control city" name="city{{ address.id }}"
+                                            id="city{{ address.id }}">
+                                        <option id="chosen-city" value="{{ address.city }}"
+                                                selected>{{ address.city }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="exact_address{{ address.id }}">آدرس دقیق:</label>
+                                <input type="text" class="form-control" name="exact_address{{ address.id }}"
+                                       id="exact_address{{ address.id }}"
+                                       value="{{ address.exact_address }}">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="No{{ address.id }}">پلاک:</label>
+                                    <input type="number" class="form-control" name="apartment_number{{ address.id }}"
+                                           id="No{{ address.id }}"
+                                           value="{{ address.apartment_number }}">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="unit{{ address.id }}">واحد:</label>
+                                    <input type="number" class="form-control" name="unit{{ address.id }}"
+                                           id="unit{{ address.id }}"
+                                           value="{{ address.unit }}">
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <label for="zip_code{{ address.id }}">کد پستی:</label>
+                                    <input type="number" class="form-control" name="zip_code{{ address.id }}"
+                                           id="zip_code{{ address.id }}"
+                                           value="{{ address.zip_code }}">
+                                </div>
+                            </div>
+                            <div id="edit-address-btn-group" class="mt-3">
+                                <button onclick="edit_address_submit({{ address.id }})"
+                                        class="btn btn-submit mr-0">ثبت آدرس
+                                </button>
+                                <button class="btn btn-danger mr-3" data-dismiss="modal">انصراف</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade address-modal" id="delete-address-modal{{ address.id }}">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form method="post" action="{% url 'edit_remove_address' address.id %}" class="address-form"
+                              id="delete-address-form{{ address.id }}">
+                            {% csrf_token %}
+
+                            <h5>آیا از حذف این آدرس مطمئن هستید؟</h5>
+                            <div id="delete-address-btn-group" class="mt-1">
+                                <button onclick="delete_address_submit({{ address.id }})"
+                                        class="btn btn-submit mr-0">حذف آدرس
+                                </button>
+                                <button class="btn btn-danger mr-3" data-dismiss="modal">انصراف</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-9">
+            <div class="row profile-row">
+                <div class="card col-10">
+                    <h5 class="alert alert-info m-2 mt-4">« مشاهده یا ویرایش اطلاعات حساب کاربری »</h5>
+                    <form method="post" id="profile-form">
+                        {% csrf_token %}
+
+                        <div class="form-row">
+                            <div class="form-group col-5 mr-4">
+                                <label for="{{ profile_form.first_name.id_for_label }}">نام:</label>
+                                {{ profile_form.first_name }}
+                            </div>
+                            <div class="form-group col-5 mr-5">
+                                <label for="{{ profile_form.last_name.id_for_label }}">نام خانوادگی:</label>
+                                {{ profile_form.last_name }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-5 mr-4">
+                                <label for="{{ profile_form.mobile.id_for_label }}">شماره موبایل:</label>
+                                <div class="input-group">
+                                    {{ profile_form.mobile }}
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-btn btn-secondary" data-toggle="modal"
+                                                data-target="#change-mobile-modal"><i class="fa fa-fw fa-edit"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-5 mr-5">
+                                <label for="{{ profile_form.email.id_for_label }}">ایمیل:</label>
+                                {{ profile_form.email }}
+                            </div>
+                        </div>
+                        <div id="add-address-btn-group" class="mt-3">
+                            <button name="send-profile" type="submit" class="btn btn-submit mr-4">ذخیره و ثبت اطلاعات
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row profile-row">
+                <div class="card col-10">
+                    <h5 class="alert alert-info m-2 mt-4">« آدرس‌های من »</h5>
+                    <div id="addresses">
+                        {% for address in user.addresses.all %}
+                            <div class="form-group row">
+                                <label class="col-0" for="address{{ address.id }}">آدرس {{ forloop.counter }}:</label>
+                                <div class="input-group col-10">
+                                    <input class="form-control disabled-input" name="address{{ address.id }}"
+                                           id="address{{ address.id }}" value="{{ address }}" disabled>
+                                    <div class="input-group-prepend">
+                                        <button class="input-group-btn" data-toggle="modal"
+                                                data-target="#edit-address-modal{{ address.id }}"><i
+                                                class="fa fa-fw fa-edit"></i>
+                                        </button>
+                                        <button class="input-group-btn" data-toggle="modal"
+                                                data-target="#delete-address-modal{{ address.id }}"><i
+                                                class="fa fa-fw fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button id="add-address-btn" class="btn btn-secondary mt-3" data-toggle="modal"
+                            data-target="#add-address-modal">افزودن آدرس جدید
+                    </button>
+                </div>
+            </div>
+            <div class="row profile-row">
+                <div class="card col-10">
+                    <h5 class="alert alert-info m-2 mt-4">« تغییر رمز عبور »</h5>
+                    <form method="post" action="{% url 'change_password' user.id %}" id="change-password-form">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label for="old-password">رمزعبور فعلی:</label>
+                            <input type="password" class="form-control" name="old-password" id="old-password">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-password">رمزعبور جدید:</label>
+                            <input type="password" class="form-control" name="new-password" id="new-password">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-password2">تکرار رمزعبور جدید:</label>
+                            <input type="password" class="form-control" name="new-password2" id="new-password2">
+                        </div>
+
+                        <div id="add-address-btn-group" class="mt-3">
+                            <button type="submit" class="btn btn-submit">تأیید و ارسال
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card side mt-3" id="profile-side-card">
+
+                {% if user.image %}
+                    <img class="card-img-top" src="{{ user.image.url }}" alt="customer">
+                {% else %}
+                    <img class="card-img-top" src="{% static 'base/img/Placeholder.jpg' %}" alt="customer">
+                {% endif %}
+                <button class="btn" id="upload-image-btn" data-toggle="modal"
+                        data-target="#upload-image-modal"><i class="fa fa-fw fa-plus-square text-info"
+                                                             style="font-size: 3rem"></i></button>
+                <div class="card-body">
+                    <a href="{% url 'accounts:profile' %}" class="text-white disabled">اطلاعات حساب کاربری</a>
+                    <a href="{% url 'accounts:orders_history' %}" class="text-white bg-info">سفارش‌های من</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'accounts/js/profile.js' %}"></script>
+{% endblock %}

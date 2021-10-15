@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
@@ -12,6 +14,7 @@ class Category(models.Model):
     name = models.CharField(_('عنوان'), max_length=30, unique=True)
     parent_category = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE,
                                         related_name='children', verbose_name=_('دسته بندی پدر'))
+    icon = models.CharField(_('آیکون فونت'), max_length=30)
 
     class Meta:
         verbose_name_plural = 'دسته‌بندی‌ها'
@@ -62,8 +65,10 @@ class Product(models.Model):
     colors = models.ManyToManyField(Color, blank=True, related_name='products', verbose_name=_('رنگ‌ها'))
     inventory = models.IntegerField(_('موجودی'), default=0)
     price = models.IntegerField(_('قیمت (به تومان)'), )
+    date_created = models.DateTimeField(_('تاریخ ایجاد محصول'), auto_now_add=True)
 
     class Meta:
+        ordering = ['date_created']
         verbose_name_plural = 'محصولات'
         verbose_name = 'محصول'
 

@@ -39,21 +39,7 @@ class Order(models.Model):
         verbose_name = 'سفارش'
 
     def __str__(self):
-        return f'سفارش: {self.id}, وضعیت مرسوله: {self.status}'
-
-    @property
-    def total_without_coupon(self):
-        return sum([item.total_item_price for item in self.items.all()])
-
-    @property
-    def total_with_coupon(self):
-        coupon = Coupon.objects.get(customers__mobile=self.customer.mobile)
-        if coupon:
-            return int(self.total_without_coupon - (self.total_without_coupon * coupon.amount / 100))
-
-    @classmethod
-    def get_active_order(cls, customer):
-        return cls.objects.get_or_create(customer=customer, status=cls.active)
+        return self.id
 
 
 class OrderItem(models.Model):
@@ -78,6 +64,7 @@ class Coupon(models.Model):
                                        verbose_name=_('کاربران موردنظر'))
     code = models.CharField(_('کد تخفیف'), max_length=15)
     amount = models.PositiveSmallIntegerField(_('درصد تخفیف'), validators=[MaxValueValidator(100)])
+    expire_date = models.DateField(_('تاریخ انقضاء'), blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'کدهای تخفیف'

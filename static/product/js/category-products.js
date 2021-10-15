@@ -1,11 +1,12 @@
-// jQuery & AJAX for showing products list with pagination
+// jQuery & AJAX for showing products list of a category with pagination
 
 let content = $('.products-row');
 let pagination = $('.pagination');
+let category_id = $('#category-id').html();
 
 $.ajax({
     type: "Get",
-    url: "/api/v1/products/",
+    url: `/api/v1/category/${category_id}`,
     dataType: "json",
     success: function (resp) {
         for (let product of resp.results) {
@@ -42,10 +43,10 @@ $.ajax({
         for (let i = 1; i <= resp.num_pages; i++) {
             if (i === 1) {
                 $(pagination).append(`
-                    <button class="active" onclick="page('/api/v1/products/?page=${i}')" disabled>${i}</button>`)
+                    <button class="active" onclick="page('/api/v1/category/${category_id}?page=${i}')" disabled>${i}</button>`)
             } else {
                 $(pagination).append(`
-                    <button class="page" onclick="page('/api/v1/products/?page=${i}')">${i}</button>`)
+                    <button class="page" onclick="page('/api/v1/category/${category_id}?page=${i}')">${i}</button>`)
             }
         }
         $(pagination).append(`<button id="next" class="page" onclick="page('${resp.next}')">&raquo;</button>`);
@@ -96,12 +97,12 @@ function page(url) {
                 $(pagination).append(`<button class="page" id="previous" onclick="page('${resp.previous}')">&laquo;</button>`)
                 for (let i = 1; i <= resp.num_pages; i++) {
                     $(pagination).append(`
-                        <button class="page" onclick="page('/api/v1/products/?page=${i}')">${i}</button>`)
+                        <button class="page" onclick="page('/api/v1/category/${category_id}?page=${i}')">${i}</button>`)
                 }
                 $(pagination).append(`<button id="next" class="page" onclick="page('${resp.next}')">&raquo;</button>`);
 
-                if (url === '/api/v1/products/') {
-                    url = '/api/v1/products/?page=1';
+                if (url === '/api/v1/category/${category_id}') {
+                    url = '/api/v1/category/${category_id}?page=1';
                 }
 
                 $('.page').each(function () {

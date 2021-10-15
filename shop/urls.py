@@ -48,6 +48,9 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
+    # setup URL for django flatpages
+    path('pages/', include('django.contrib.flatpages.urls')),
+
     path('accounts/', include('accounts.urls')),
     path('', include('product.urls')),
     path('orders/', include('order.urls')),
