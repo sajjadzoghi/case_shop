@@ -1,27 +1,12 @@
-from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DetailView, ListView, CreateView, TemplateView
+from django.shortcuts import render
+from django.views.generic import CreateView
 
-from accounts.forms import AddressForm
-from accounts.models import Address
 from order.forms import OrderForm, OrderItemForm
 from order.models import Order, OrderItem, Coupon
 
 
 # Create your views here.
-class AddOrderAddress(LoginRequiredMixin, CreateView):
-    model = Address
-    form_class = AddressForm
-    template_name = 'order/add-address.html'
-    success_url = '/orders/create-order/'
-
-    def form_valid(self, form):
-        form.instance.customer = self.request.user
-        return super().form_valid(form)
-
 
 class CreateOrder(LoginRequiredMixin, CreateView):
     model = Order
@@ -52,14 +37,3 @@ def order_result(request):
         except (KeyError, Coupon.DoesNotExist):
             return render(request, 'order/order-result.html')
     return render(request, 'order/order-result.html')
-
-
-class DetailOrder(DetailView):
-    model = Order
-    template_name = 'order/order-detail.html'
-
-
-class ListOrder(ListView):
-    model = Order
-    context_object_name = 'carts'
-    template_name = 'order/all_orders.html'

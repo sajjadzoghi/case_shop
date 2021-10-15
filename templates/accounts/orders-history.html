@@ -1,0 +1,130 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %}سفارش‌های من{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}">
+{% endblock %}
+
+{% block modal %}
+    <div class="modal fade" id="upload-image-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form method="POST" id="upload-image-form" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group" id="upload-image-group">
+                            <label for="{{ image_form.image.id_for_label }}" id="image-upload">
+                                برای انتخاب تصویر کلیک کنید
+                                <i class="fa fa-fw fa-plus-circle" style="font-size: 2rem"></i></label>
+                            {{ image_form.image }}
+                        </div>
+                        <div id="upload-image-btn-group">
+                            <button type="button" class="btn btn-danger mr-3" data-dismiss="modal">انصراف</button>
+                            <button name="send-img" type="submit" class="btn btn-submit" id="verify-otp-btn">
+                                تأیید و ارسال
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for order in orders %}
+        <div class="modal fade order-modal" id="order-modal{{ order.id }}">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        {% for item in order.items.all %}
+                            <div>
+                                <div class="row" style="direction: rtl;margin-right: 1px">
+                                    <img alt="item" src="{{ item.product.images.all.0.image.url }}">
+                                    <p class="text-dark"
+                                        style="margin-top: 1rem;margin-right: 3px">{{ item.product.name_fa }}</p>
+                                </div>
+                                <div class="row mt-2" style="direction: rtl;margin-right: 1px">
+                                    <p class="text-dark">{{ item.quantity }} عدد</p>
+                                    <div style="height: 1.2rem;border: 0.001mm ridge grey;margin-right: 2rem;margin-left: 2rem;"></div>
+                                    <p class="text-dark">رنگ {{ item.color }}</p>
+                                    <div style="height: 1.2rem;border: 0.001mm ridge grey;margin-right: 2rem;margin-left: 2rem;"></div>
+                                    <p class="text-dark">قیمت واحد: {{ item.product.final_price }} تومان</p>
+                                </div>
+                                <h5 class="text-dark" style="direction: rtl">قیمت نهایی: {{ item.total_item_price }}
+                                    تومان</h5>
+                                <p>___________________________________________________________</p>
+                            </div>
+                        {% endfor %}
+                        <div class="mb-4">
+                            <h5 class="text-secondary"><small>مبلغ کل سفارش (بدون احتساب تخفیف)</small>:
+                                {{ order.total_price }} تومان</h5>
+                            <h5 class="text-secondary"><small>اعمال کد تخفیف</small>: {{ order.discount_amount }} -
+                                تومان</h5>
+                            <h5 class="text-dark">مبلغ نهایی سفارش: {{ order.total_with_coupon }}تومان</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-9">
+            <div class="row profile-row">
+                <div class="card col-10">
+                    <h5 class="alert alert-info m-2 mt-4">« سفارش‌های من »</h5>
+                    <table id="items-table" class="table table-striped" style="direction: rtl">
+                        <thead>
+                        <tr>
+                            <th scope="col">شماره سفارش</th>
+                            <th scope="col">تاریخ و زمان ثبت</th>
+                            <th scope="col">وضعیت سفارش</th>
+                            <th scope="col">مبلغ کل سفارش<small>(بدون احتساب تخفیف)</small></th>
+                            <th scope="col">مبلغ کل سفارش<small>(با احتساب تخفیف)</small></th>
+                            <th scope="col">جزئیات</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for order in orders %}
+                            <tr id="order{{ order.id }}">
+                                <td class="order-id"></td>
+                                <td class="order-datetime">{{ order.datetime }}</td>
+                                <td class="order-status">{{ order.status }}</td>
+                                <td class="order-total-price">{{ order.total_price }}</td>
+                                <td class="order-total-price-coupon">{{ order.total_with_coupon }}</td>
+                                <td class="order-detail">
+                                    <button class="btn btn-secondary" data-toggle="modal"
+                                            data-target="#order-modal{{ order.id }}">جزئیات
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card side mt-3" id="profile-side-card">
+
+                {% if user.image %}
+                    <img class="card-img-top" src="{{ user.image.url }}" alt="customer">
+                {% else %}
+                    <img class="card-img-top" src="{% static 'base/img/Placeholder.jpg' %}" alt="customer">
+                {% endif %}
+                <button class="btn" id="upload-image-btn" data-toggle="modal"
+                        data-target="#upload-image-modal"><i class="fa fa-fw fa-plus-square text-info"
+                                                             style="font-size: 3rem"></i></button>
+                <div class="card-body">
+                    <a href="{% url 'accounts:profile' %}" class="text-white bg-info">اطلاعات حساب کاربری</a>
+                    <a href="{% url 'accounts:orders_history' %}" class="text-white disabled">سفارش‌های
+                        من</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

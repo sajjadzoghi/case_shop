@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 from django import forms
 
-from accounts.models import Address
+from accounts.models import Address, Customer
 
 
 class LoginForm(forms.Form):
@@ -20,14 +20,25 @@ class LoginForm(forms.Form):
         return cleaned_data
 
 
-class AddressForm(forms.ModelForm):
+class ProfileForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        self.fields['mobile'].widget.attrs['readonly'] = True
 
     class Meta:
-        model = Address
-        exclude = ['customer', ]
-        error_messages = {
-            'province': {'required': '.استان انتخاب نشده'},
-            'city': {'required': '.شهر انتخاب نشده'},
-            'exact_address': {'required': '.آدرس دقیق وارد نشده'},
-            'apartment_number': {'required': '.پلاک وارد نشده'},
+        model = Customer
+        fields = ('first_name', 'last_name', 'mobile', 'email')
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'mobile': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+
+class ImageForm(forms.ModelForm):
+
+    class Meta:
+        model = Customer
+        fields = ('image', )

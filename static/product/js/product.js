@@ -63,8 +63,7 @@ if (sessionStorage.items) {
 
 
 // adding product to shopping-cart through "sessionStorage"
-$(`#product-form`).submit(function (e) {
-    e.preventDefault(); // avoid to execute the actual submit of the form.
+$(`#add-product${product_id}`).on('click', function () {
 
     let name = $('#name-fa').html();
     let image = $('#image').val();
@@ -82,6 +81,10 @@ $(`#product-form`).submit(function (e) {
         'price': price,
         'guarantee': guarantee,
     };
+
+    sessionStorage.removeItem('coupon_code');
+    sessionStorage.removeItem('coupon_amount');
+    sessionStorage.removeItem('total_price_coupon');
     $('#is-empty').remove();
     $('#cart-btn-group').show();
     $('#empty-button').remove();

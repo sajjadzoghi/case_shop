@@ -1,0 +1,18 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %}{{ flatpage.title }}{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'accounts/css/flatpages.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="row login-row">
+        <div class="card col-9 mr-auto ml-auto">
+            <h3 class="alert alert-info text-center m-2 mt-4">« {{ flatpage.title }} »</h3>
+            <h5 style="direction: rtl;" class="p-4">{{ flatpage.content|escape|linebreaks }}</h5>
+        </div>
+    </div>
+{% endblock %}

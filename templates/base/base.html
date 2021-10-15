@@ -40,11 +40,11 @@
                                     <h4>{{ user.first_name }} {{ user.last_name }}</h4>
                                 </div>
                                 <div class="card-body" style="text-align: right">
-                                    <a href="#" style="font-size: 14px">مشاهده حساب کاربری<i
+                                    <a href="{% url 'accounts:profile' %}">مشاهده حساب کاربری<i
                                             class="fa fa-fw fa-user-circle-o"></i></a><br>
-                                    <a href="#" style="font-size: 14px">سفارش‌های من<i
+                                    <a href="#">سفارش‌های من<i
                                             class="fa fa-fw fa-shopping-bag"></i></a><br>
-                                    <a href="{% url 'accounts:logout' %}" style="font-size: 14px">خروج از حساب کاربری<i
+                                    <a href="{% url 'accounts:logout' %}">خروج از حساب کاربری<i
                                             class="fa fa-fw fa-sign-out"></i></a>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
                     <a class="nav-link" href="#">تماس با کالاشاپ<i class="fa fa-fw fa-phone"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">درباره کالاشاپ<i class="fa fa-fw fa-info-circle"></i></a>
+                    <a class="nav-link" href="/about-us/">درباره کالاشاپ<i class="fa fa-fw fa-info-circle"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">تخفیف‌ها و پیشنهادها<i class="fa fa-fw fa-percent"></i></a>
@@ -118,25 +118,29 @@
                             <input type="text" class="form-control" name="reg-mobile" id="reg-mobile">
                         </div>
                         <div class="form-group" id="first_name-group">
-                            <label for="first_name">:نام</label>
-                            <input type="text" class="form-control" name="first_name" id="first_name">
+                            <label for="reg-first_name">:نام</label>
+                            <input type="text" class="form-control" name="reg-first_name" id="reg-first_name">
                         </div>
                         <div class="form-group" id="last_name-group">
-                            <label for="last_name">:نام‌خانوادگی</label>
-                            <input type="text" class="form-control" name="last_name" id="last_name">
+                            <label for="reg-last_name">:نام‌خانوادگی</label>
+                            <input type="text" class="form-control" name="reg-last_name" id="reg-last_name">
                         </div>
                         <div class="form-group" id="email-group">
-                            <label for="email">:ایمیل</label>
-                            <input type="text" class="form-control" name="email" id="email">
+                            <label for="reg-email">:ایمیل</label>
+                            <input type="text" class="form-control" name="reg-email" id="reg-email">
                         </div>
                         <div class="form-group" id="reg-password-group">
                             <label for="reg-password">:رمز عبور</label>
-                            <input type="text" class="form-control" name="reg-password" id="reg-password">
+                            <input type="password" class="form-control" name="reg-password" id="reg-password">
+                        </div>
+                        <div class="form-group" id="reg-password2-group">
+                            <label for="reg-password2">:تکرار رمز عبور</label>
+                            <input type="password" class="form-control" name="reg-password2" id="reg-password2">
                         </div>
 
                         <button type="button" class="btn btn-danger mr-3" data-dismiss="modal">انصراف</button>
-                        <button type="submit" class="btn btn-submit" id="send-info-btn">
-                            تکمیل ثبت نام
+                        <button type="submit" class="btn btn-submit mr-0" style="width: 8rem" id="send-info-btn">
+                            دریافت کد تأیید
                         </button>
                     </form>
                 </div>
@@ -150,12 +154,12 @@
                     <form method="POST" action="{% url 'verify_otp' %}" id="otp-form" enctype="multipart/form-data">
 
                         <div class="form-group" id="otp-group">
-                            <label for="otp">:کد تایید ارسال‌شده به گوشی را وارد کنید</label>
+                            <label for="otp">:لطفاً کد تأیید ۶رقمی ارسال شده به گوشی خود را وارد کنید</label>
                             <input type="number" class="form-control" name="otp" id="otp" maxlength="6" minlength="6">
                         </div>
                         <div id="otp-btn-group">
                             <button type="button" class="btn btn-danger mr-3" data-dismiss="modal">انصراف</button>
-                            <button type="submit" class="btn btn-submit" id="verify-otp-btn">
+                            <button type="submit" class="btn btn-submit mr-0" id="verify-otp-btn">
                                 ارسال
                             </button>
                         </div>
